@@ -1,0 +1,11 @@
+int8 color_mode_id
+int16 color_sensor_value_1
+int16 color_sensor_value_2
+int16 color_sensor_value_3
+int8 ultrasonic_mode_id
+int16 ultrasonic_sensor
+int32 arm_count
+int32 right_count
+int32 left_count
+float32 gyro_sensor
+int32 d_seq
