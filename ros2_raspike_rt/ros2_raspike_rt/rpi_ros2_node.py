@@ -14,7 +14,7 @@ from rclpy.executors import MultiThreadedExecutor
 
 from .app_node import *
 from .lib.spike_val import *
-
+'''
 white_brightness = 74
 brack_brightness = 4
 left_edge = -1
@@ -24,8 +24,8 @@ kp = 0.59
 kd = 0.04
 ki = 0.0
 bace_speed = 40
-
 cnt = 0
+'''
 
 
 # サブスクライバーノード
@@ -40,12 +40,12 @@ class rasberryPiNode(Node):
         self.steering_amount = 0
         # 受信メッセージ
         self.rev_color_mode = 0
-        self.rev_color_sensor_ambient = 0
-        self.rev_color_sensor_color = 0
-        self.rev_color_sensor_refrection = 0
-        self.rev_color_sensor_r = 0
-        self.rev_color_sensor_g = 0
-        self.rev_color_sensor_b = 0
+        #self.rev_color_sensor_ambient = 0
+        #self.rev_color_sensor_color = 0
+        #self.rev_color_sensor_refrection = 0
+        #self.rev_color_sensor_r = 0
+        #self.rev_color_sensor_g = 0
+        #self.rev_color_sensor_b = 0
         self.rev_ultrasonic_mode = 0
         #self.rev_arm_cnt = 0
         #self.rev_right_cnt = 0
@@ -58,14 +58,14 @@ class rasberryPiNode(Node):
         # 送信メッセージ
         
 
-        self.send_send_ultrasonic_mode = 0
-        self.send_is_imu_init = False
-        self.send_color_mode = 0
+        #self.send_send_ultrasonic_mode = 0
+        #self.send_is_imu_init = False
+        #self.send_color_mode = 0
         # line_trace_on_tick
-        self.is_rev_reflection = False
-        self.is_rev_color_code = False
-        self.diff = [0, 0]
-        self.pre_i_val = 0
+        #self.is_rev_reflection = False
+        #self.is_rev_color_code = False
+        #self.diff = [0, 0]
+        #self.pre_i_val = 0
 
         # パブリッシャーの生成
         self.motor_speed_publisher = self.create_publisher(MotorSpeedMessage, "wheel_motor_speeds", qos_profile)
@@ -86,77 +86,6 @@ class rasberryPiNode(Node):
         
         self.get_logger().info("line tracer node init")
 
-    '''
-    # reflettionを取得
-    def get_reflection(self):
-        if self.send_color_mode != 3:
-            send_color_mode = 3
-            color_mode = Int8()
-            color_mode.data = send_color_mode
-            self.color_mode_publisher.publish(color_mode)
-
-        if self.rev_color_mode == 3:
-            self.is_rev_reflection =  True
-
-    # color codeを取得
-    def get_color_code(self):
-        if self.send_color_mode != 2:
-            send_color_mode = 2
-            color_mode = Int8()
-            color_mode.data = send_color_mode
-            self.color_mode_publisher.publish(color_mode)
-
-        if self.rev_color_mode == 2:
-            self.is_rev_color_code = True
-            
-    def steering_amount_calculation(self):
-        target_brightness = (white_brightness - brack_brightness) / 2
-        
-        diff_brightness = target_brightness - self.rev_color_sensor_refrection
-        delta_t = 10
-
-        self.diff[1] = self.diff[0]
-        self.diff[0] = int(diff_brightness)
-
-        p_val = diff_brightness
-        i_val = self.pre_i_val + (self.diff[0] + self.diff[1]) * delta_t / 2
-        d_val = int((self.diff[0] - self.diff[1]) / 1)
-
-        self.steering_amount = (kp * p_val) + (kd * d_val) + (ki * i_val)
-
-    def motor_drive_control(self):
-        self.send_left_speed = int(bace_speed + (self.steering_amount * left_edge))
-        self.send_right_speed = int(bace_speed - (self.steering_amount * left_edge))
-
-        if self.send_left_speed > 80:
-            self.send_left_speed =80
-        if self.send_left_speed < -80:
-            self.send_left_speed =-80
-        if self.send_right_speed >80:
-            self.send_right_speed = 80
-        if self.send_right_speed  < -80:
-            self.send_right_speed = -80
-
-    def line_trace_on_tick(self):
-
-        if self.rev_button_val == 16:
-            self.is_start = True
-        if self.is_start == False:
-            return
-
-        self.get_reflection()       #reflection値を取得
-        if self.is_rev_reflection == False:     #reflection値が更新するまで待機
-            return
-
-        self.steering_amount_calculation()
-        self.motor_drive_control()
-
-        # 初期状態に戻す
-        self.is_rev_reflection = False
-        self.is_rev_color_code == False
-        self.rev_color_mode = 0
-    '''
-
     def timer_on_tick(self):
         # メッセージの生成
         motor_speed = MotorSpeedMessage()
@@ -175,7 +104,7 @@ class rasberryPiNode(Node):
         # motor speed パブリッシュ
         self.motor_speed_publisher.publish(motor_speed)
 
-        color_mode.data = 3
+        color_mode.data = 3     #reflection固定
         #color_mode.data = send_data.get_rpi_color_mode()
         # color mode パブリッシュ
         self.color_mode_publisher.publish(color_mode)
@@ -232,7 +161,6 @@ class rasberryPiNode(Node):
         rev_data.set_touch_sensor_status(button_status.touch_sensor)
 
     def hub_status_on_subscribe(self, hub_status):
-
         rev_data.set_voltage(hub_status.voltage)
         rev_data.set_current(hub_status.current)
 
