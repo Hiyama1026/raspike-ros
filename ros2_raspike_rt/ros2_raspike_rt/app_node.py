@@ -1,7 +1,8 @@
 import rclpy
 from rclpy.node import Node
 
-from .lib.spike_val import *
+from .tools.spike_val import *
+from .tools.api import *
 
 white_brightness = 74
 brack_brightness = 4
@@ -18,7 +19,7 @@ class appNode(Node):
     def __init__(self):
         super().__init__("app_node")
         # タイマーの生成
-        self.timer = self.create_timer(0.01, self.app_timer)
+        self.timer = self.create_timer(1, self.app_timer)
         self.test_seq = 0
         self.is_start = False
         self.reflection_val = 0
@@ -29,7 +30,8 @@ class appNode(Node):
         # ログ出力
         self.get_logger().info('app init done')
 
-
+    '''
+    # ライントレース
     def steering_amount_calculation(self):
         target_brightness = (white_brightness - brack_brightness) / 2
         
@@ -48,16 +50,6 @@ class appNode(Node):
     def motor_drive_control(self):
         send_data.set_left_speed(int(bace_speed + (self.steering_amount * left_edge)))
         send_data.set_right_speed(int(bace_speed - (self.steering_amount * left_edge)))
-        '''
-        if self.send_left_speed > 80:
-            self.send_left_speed =80
-        if self.send_left_speed < -80:
-            self.send_left_speed =-80
-        if self.send_right_speed >80:
-            self.send_right_speed = 80
-        if self.send_right_speed  < -80:
-            self.send_right_speed = -80
-        '''
 
     # timer callback
     def app_timer(self):
@@ -66,21 +58,25 @@ class appNode(Node):
         if self.is_start == False:
             return
 
-        self.reflection_val = rev_data.get_reflection()
+        self.reflection_val = rev_data.get_reflect()
 
         self.steering_amount_calculation()
         self.motor_drive_control()
-
     '''
+    
+    # テスト
     def app_timer(self):
         #print('test')
 
-        print(rev_data.get_reflection())
-
+        print(color.get_color_code())
+        print(color.get_reflection())
+        print('---')
+        #motor.set_wheel_speed(self.test_seq, -self.test_seq)
+    
         #print('     -r-')
         #print(rev_data.get_right_count())
         #print('     -l-')
         #print(rev_data.get_left_count())
 
-        self.test_seq += 1
-    '''
+        self.test_seq += 10
+    

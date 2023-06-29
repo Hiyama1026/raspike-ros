@@ -13,19 +13,7 @@ from rclpy.qos import QoSProfile
 from rclpy.executors import MultiThreadedExecutor
 
 from .app_node import *
-from .lib.spike_val import *
-'''
-white_brightness = 74
-brack_brightness = 4
-left_edge = -1
-right_edge = 1
-
-kp = 0.59
-kd = 0.04
-ki = 0.0
-bace_speed = 40
-cnt = 0
-'''
+from .tools.spike_val import *
 
 
 # サブスクライバーノード
@@ -36,36 +24,9 @@ class rasberryPiNode(Node):
 
         qos_profile = QoSProfile(depth=10, reliability=2)
 
-        self.is_start = False
-        self.steering_amount = 0
         # 受信メッセージ
         self.rev_color_mode = 0
-        #self.rev_color_sensor_ambient = 0
-        #self.rev_color_sensor_color = 0
-        #self.rev_color_sensor_refrection = 0
-        #self.rev_color_sensor_r = 0
-        #self.rev_color_sensor_g = 0
-        #self.rev_color_sensor_b = 0
         self.rev_ultrasonic_mode = 0
-        #self.rev_arm_cnt = 0
-        #self.rev_right_cnt = 0
-        #self.rev_left_cnt = 0
-        #self.rev_x_ang_vel = 0.0
-        #self.rev_touch_sensor_val = 0
-        #self.rev_button_val = 0
-        #self.rev_hub_volt = 0
-        #self.rev_hub_current = 0
-        # 送信メッセージ
-        
-
-        #self.send_send_ultrasonic_mode = 0
-        #self.send_is_imu_init = False
-        #self.send_color_mode = 0
-        # line_trace_on_tick
-        #self.is_rev_reflection = False
-        #self.is_rev_color_code = False
-        #self.diff = [0, 0]
-        #self.pre_i_val = 0
 
         # パブリッシャーの生成
         self.motor_speed_publisher = self.create_publisher(MotorSpeedMessage, "wheel_motor_speeds", qos_profile)
@@ -75,7 +36,6 @@ class rasberryPiNode(Node):
         self.imu_init_publisher = self.create_publisher(Bool, "imu_init", 10)
         # タイマーの生成
         self.timer_callback = self.create_timer(0.01, self.timer_on_tick)                           #wheel_speed
-        #self.line_trace_callback = self.create_timer(0.01, self.line_trace_on_tick)
         # サブスクライバーの生成
         self.dev_status_subscription = self.create_subscription(
             SpikeDevStatusMessage, "spike_device_status", self.dev_status_on_subscribe, qos_profile)
@@ -104,8 +64,8 @@ class rasberryPiNode(Node):
         # motor speed パブリッシュ
         self.motor_speed_publisher.publish(motor_speed)
 
-        color_mode.data = 3     #reflection固定
-        #color_mode.data = send_data.get_rpi_color_mode()
+        #color_mode.data = 3     #reflection固定
+        color_mode.data = send_data.get_rpi_color_mode()
         # color mode パブリッシュ
         self.color_mode_publisher.publish(color_mode)
 
@@ -134,7 +94,7 @@ class rasberryPiNode(Node):
         elif self.rev_color_mode == 2:
             rev_data.set_color(devise_status.color_sensor_value_1)
         elif self.rev_color_mode == 3:
-            rev_data.set_reflection(devise_status.color_sensor_value_1)
+            rev_data.set_reflect(devise_status.color_sensor_value_1)
         elif self.rev_color_mode == 4:
             rev_data.set_r(devise_status.color_sensor_value_1)
             rev_data.set_g(devise_status.color_sensor_value_2)

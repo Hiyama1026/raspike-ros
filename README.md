@@ -24,8 +24,9 @@
 
 - ros2_raspike_rt
     - アプリ開発用ROS2パッケージ
-    - appNodeクラス内の`app_timer()`に処理を記述
+    - appNodeクラス内の`app_timer()`に処理を記述する
         - 周期的に呼ばれる
+        - 現在はライントレースプログラムが書かれている
         - ToDo：APIを用意する
 
 - uros_raspike-rt
