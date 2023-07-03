@@ -350,7 +350,7 @@ X軸方向の角速度を取得する．
 - bool [button.is_center_pressed](#bool-buttonis_center_pressedvoid)(void)
 - bool [button.is_left_pressed](#bool-buttonis_left_pressedvoid)(void)
 - bool [button.is_right_pressed](#bool-buttonis_right_pressedvoid)(void)
-- bool [button.is_bluetooth_pressed](#bool-buttonis_bluetooth_pressedvoid)
+- bool [button.is_bluetooth_pressed](#bool-buttonis_bluetooth_pressedvoid)(void)
 - int8 [button.get_pressed_button_command](#int8-buttonget_pressed_button_commandvoid)(void)
 
 ### 関数詳解

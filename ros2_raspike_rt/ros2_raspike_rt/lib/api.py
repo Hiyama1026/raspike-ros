@@ -57,13 +57,13 @@ class motorClass:
         send_data.set_left_stop_brake_val(2)
         self.lock.release()
     
-    def right_motor_brake(self):
+    def right_motor_stop(self):
         send_data.set_right_stop_brake_val(2)
     
-    def left_motor_brake(self):
+    def left_motor_stop(self):
         send_data.set_left_stop_brake_val(2)
 
-    def arm_motor_brake(self):
+    def arm_motor_stop(self):
         send_data.set_arm_stop_brake_val(2)
 
     # motor get count
@@ -96,12 +96,11 @@ motor = motorClass()
     
 class colorSensorClass:
     def __init__(self):
-        self.rgb = [0, 0, 0]
+        rgb = [0, 0, 0]
 
     # color mode
     def set_color_mode(self, c_mode):
         send_data.set_rpi_color_mode_val(c_mode)
-        
     def get_color_mode(self):
         return send_data.get_rpi_color_mode_val()
 
@@ -126,11 +125,11 @@ class colorSensorClass:
 
     def get_rgb(self):
         if rev_data.get_spi_color_mode_val() == 4:
-            self.rgb = [rev_data.get_r_val(), rev_data.get_g_val(), rev_data.get_b_val()]
-            return self.rgb
+            rgb = [rev_data.get_r_val(), rev_data.get_g_val(), rev_data.get_b_val()]
+            return rgb
         else:
-            self.rgb = [-1, -1, -1]
-            return self.rgb
+            rgb = [-1, -1, -1]
+            return rgb
 
     def get_rgb_r(self):
         if rev_data.get_spi_color_mode_val() == 4:
@@ -159,7 +158,6 @@ class ultrasonicSensorClass:
     # ultrasonic sensor mode
     def set_ultrasonic_mode(self,u_mode):
         send_data.set_rpi_ultrasonic_mode_val(u_mode)
-    
     def get_ultrasonic_mode(self):
         return send_data.get_rpi_ultrasonic_mode_val()
 

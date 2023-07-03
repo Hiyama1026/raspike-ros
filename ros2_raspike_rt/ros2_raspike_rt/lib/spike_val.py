@@ -240,6 +240,4 @@ send_data = send_data_class()
 ToDo
 
 rgb挙動確認
-距離センサー挙動確認
-imu init
 '''
