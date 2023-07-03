@@ -1,7 +1,7 @@
 from setuptools import setup
 
 package_name = 'ros2_raspike_rt'
-submodules = 'ros2_raspike_rt/tools'
+submodules = 'ros2_raspike_rt/lib'
 
 setup(
     name=package_name,
