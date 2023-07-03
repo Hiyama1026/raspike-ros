@@ -96,11 +96,12 @@ motor = motorClass()
     
 class colorSensorClass:
     def __init__(self):
-        rgb = [0, 0, 0]
+        self.rgb = [0, 0, 0]
 
     # color mode
     def set_color_mode(self, c_mode):
         send_data.set_rpi_color_mode_val(c_mode)
+        
     def get_color_mode(self):
         return send_data.get_rpi_color_mode_val()
 
@@ -125,11 +126,11 @@ class colorSensorClass:
 
     def get_rgb(self):
         if rev_data.get_spi_color_mode_val() == 4:
-            rgb = [rev_data.get_r_val(), rev_data.get_g_val(), rev_data.get_b_val()]
-            return rgb
+            self.rgb = [rev_data.get_r_val(), rev_data.get_g_val(), rev_data.get_b_val()]
+            return self.rgb
         else:
-            rgb = [-1, -1, -1]
-            return rgb
+            self.rgb = [-1, -1, -1]
+            return self.rgb
 
     def get_rgb_r(self):
         if rev_data.get_spi_color_mode_val() == 4:
@@ -158,6 +159,7 @@ class ultrasonicSensorClass:
     # ultrasonic sensor mode
     def set_ultrasonic_mode(self,u_mode):
         send_data.set_rpi_ultrasonic_mode_val(u_mode)
+    
     def get_ultrasonic_mode(self):
         return send_data.get_rpi_ultrasonic_mode_val()
 
