@@ -1,3 +1,0 @@
-int8 arm_motor_speed
-int8 arm_motor_stop_brake
-int32 arm_seq

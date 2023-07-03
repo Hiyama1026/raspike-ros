@@ -8,4 +8,3 @@ int32 arm_count
 int32 right_count
 int32 left_count
 float32 gyro_sensor
-int32 d_seq

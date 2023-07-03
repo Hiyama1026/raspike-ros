@@ -9,13 +9,11 @@
 
 #include <std_msgs/msg/header.h>
 
-//Add
 #include <sensor_msgs/msg/range.h>
-//Add
 #include <micro_ros_utilities/type_utilities.h>
 #include <micro_ros_utilities/string_utilities.h>
 
-/*spike hub&pub include*/
+/*spike hub&pub lib*/
 #include <spike/hub/display.h>
 #include "spike/pup/motor.h"
 #include "spike/pup/colorsensor.h"
@@ -31,20 +29,19 @@
 #include <time.h>
 #include "uros.h"
 
-//u_ros msgs
+//u_ros custom message
 #include <std_msgs/msg/int8.h>		//int8
 #include <std_msgs/msg/bool.h>		//bool
 #include <raspike_uros_msg/msg/button_status_message.h>			//button status
 #include <raspike_uros_msg/msg/spike_dev_status_message.h>		//device status
-#include <raspike_uros_msg/msg/button_status_message.h>			//button status
 #include <raspike_uros_msg/msg/spike_power_status_message.h>	//power status
 #include <raspike_uros_msg/msg/motor_speed_message.h>			//motor speed
 #include <raspike_uros_msg/msg/motor_reset_message.h>			//reset count
 
-//#define STRING_BUFFER_LEN 50
 
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){error_loop(temp_rc);}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
+
 
 #if 0
 static pup_color_hsv_t detect_color_for_lego_official[] = {
@@ -93,7 +90,6 @@ std_msgs__msg__Int8 color_sensor_mode;
 std_msgs__msg__Int8 ultrasonic_sensor_mode;
 std_msgs__msg__Bool imu_init;
 
-/*main_taskとの共有変数*/
 static pbio_error_t r_err;     
 static pbio_error_t l_err;      
 static pbio_error_t a_err;
@@ -110,22 +106,26 @@ int8_t send_ultrasonic_mode_id;
 int16_t send_ultrasonic_value;
 int8_t current_color_mode;
 int8_t current_ultrasonic_mode;
-
-SYSTIM *p_systim;
-
 static timer_count = 0;
-
-void error_loop(rcl_ret_t temp_rc){
-	syslog(LOG_NOTICE, "error_loop %d\n", temp_rc);
-	while(1){
-		dly_tsk(100);
-	}
-}
 
 int button_state;
 int touch_sensor_state;
 int pre_button_state;
 int pre_touch_sensor_state;
+
+SYSTIM *p_systim;
+
+
+void error_loop(rcl_ret_t temp_rc){
+	syslog(LOG_NOTICE, "error_loop %d\n", temp_rc);
+
+    hub_display_image(img_sad);             //ディスプレイ表示
+    hub_light_on_color(PBIO_COLOR_RED);     //ステータスライトを赤く点灯する
+
+	while(1){
+		dly_tsk(100);
+	}
+}
 
 void get_color_code(void){
     pup_color_hsv_t tmp_color_val;
@@ -135,7 +135,7 @@ void get_color_code(void){
     // for EV3
     switch (tmp_color_val.h){
         case 0:
-            if (tmp_color_val.s == 100){        // RED (PBIO_COLOR_HUE_RED=0)
+            if (tmp_color_val.s == 100){            // RED (PBIO_COLOR_HUE_RED=0)
             send_color_value_1 = 5;
             }
             else if (tmp_color_val.v == 100){       // WHITE
@@ -161,7 +161,7 @@ void get_color_code(void){
             send_color_value_1 = 7;
             break;
         default:
-            send_color_value_1 = -1;                //NONE  オリジナルは送信しない
+            send_color_value_1 = -1;                //NONE
     }
 #endif
 
@@ -179,7 +179,7 @@ void get_color_code(void){
                 send_color_value_1 = 0;
             }
             else{
-                send_color_value_1 = -1;                     //NONE
+                send_color_value_1 = -1;            //NONE
             }
             break;
         case PBIO_COLOR_HUE_ORANGE:
@@ -231,7 +231,7 @@ void get_color_sensor_value(int8_t color_mode){
                 send_color_mode_id = 2;
                 break;
             case 3:
-                send_color_value_1 = pup_color_sensor_reflection(col);  //0~100以外の時は送信しない
+                send_color_value_1 = pup_color_sensor_reflection(col);
                 send_color_value_2 = 0;
                 send_color_value_3 = 0;
                 send_color_mode_id = 3;
@@ -297,25 +297,9 @@ static int wait_for_hub_buttons(hub_button_t button_candidates)
     return button_command;
 }
 
-
-int32_t time_index;
-int32_t spike_times[100];
-int32_t pub_times[100];
-
 void 
 timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 {
-	int32_t start_tim;
-	int32_t spike_tim;
-	int32_t spike_delta_time;
-	int32_t pub_tim;
-	int32_t pub_delta_time;
-
-	//get_tim(&p_systim);
-	//start_tim = (int32_t)p_systim;
-
-	//dly_tsk(10000);
-
 	float hub_angular_velocity[3];
 
 	RCLC_UNUSED(last_call_time);
@@ -338,19 +322,7 @@ timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 		hub_imu_get_angular_velocity(&hub_angular_velocity[0]);
 		device_status.gyro_sensor = hub_angular_velocity[0];
 
-		//get_tim(&p_systim);
-		//spike_tim = (int32_t)p_systim;
-		spike_delta_time = spike_tim - start_tim;
-
-		spike_times[time_index] = spike_delta_time;
-
 		RCSOFTCHECK(rcl_publish(&dev_status_publisher, &device_status, NULL));
-
-		//get_tim(&p_systim);
-		//pub_tim = (int32_t)p_systim;
-		pub_delta_time = pub_tim - spike_tim;
-
-		pub_times[time_index] = pub_delta_time;
 
 
 		/*button_status_publisher*/
@@ -377,23 +349,12 @@ timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 		}
 	}
 }
-/*ドロップ調査用*/
-int pre_motor_seq = -1;
-int motor_seq = 0;
-int motor_cnt;
-int pre_reset_seq = -1;
-int reset_seq = 0;
-int reset_cnt;
-int pre_col_mode_seq = -1;
-int col_mode_seq = 0;
-int col_mode_cnt;
-/*ドロップ調査用*/
+
 
 void motor_speed_callback(const void * msgin)
 {
     const raspike_uros_msg__msg__MotorSpeedMessage * motor_speed = (const raspike_uros_msg__msg__MotorSpeedMessage *)msgin;
-	//syslog(LOG_NOTICE, "motor");
-	/*出力*/
+
 	if(motor_speed->arm_motor_stop_brake != 0){
 		if(motor_speed->arm_motor_stop_brake)	pup_motor_stop(a_motor);		//arm_motor_stop_brake=1 -> stop
 		else									pup_motor_brake(a_motor);		//arm_motor_stop_brake=2 -> brake
@@ -415,22 +376,6 @@ void motor_speed_callback(const void * msgin)
 	else{
 		pup_motor_set_power(r_motor, motor_speed->right_motor_speed);
 	}
-
-	/*ドロップ調査*/
-	motor_seq = motor_speed->wheel_seq;
-	if(pre_motor_seq+1 != motor_seq){
-		//syslog(LOG_NOTICE, "motor pre %d, now %d\n", pre_motor_seq, motor_seq);
-	}
-	pre_motor_seq = motor_seq;
-	motor_cnt++;
-
-	if(motor_seq >= 1000){
-		syslog(LOG_NOTICE, " end 1000");
-		syslog(LOG_NOTICE, " motor_cnt %d", motor_cnt);
-		syslog(LOG_NOTICE, " reset_cnt %d", reset_cnt);
-		syslog(LOG_NOTICE, " col_mode_cnt %d", col_mode_cnt);
-	}
-	/*ドロップ調査*/
 }
 
 void reset_count_callback(const void * msgin)
@@ -440,15 +385,6 @@ void reset_count_callback(const void * msgin)
 	if(reset_count->arm_motor_reset)	pup_motor_reset_count(a_motor);
 	if(reset_count->left_motor_reset)	pup_motor_reset_count(l_motor);
 	if(reset_count->right_motor_reset)	pup_motor_reset_count(r_motor);
-
-	/*ドロップ調査*/
-	reset_seq = reset_count->reset_seq;
-	if(pre_reset_seq+1 != reset_seq){
-		syslog(LOG_NOTICE, "reset drop %d\n", pre_reset_seq+1);
-	}
-	pre_reset_seq = reset_seq;
-	reset_cnt++;
-	/*ドロップ調査*/
 }
 
 void color_mode_callback(const void * msgin)
@@ -456,30 +392,16 @@ void color_mode_callback(const void * msgin)
 	const std_msgs__msg__Int8 * color_sensor_mode = (const std_msgs__msg__Int8 *)msgin;
 
 	current_color_mode = color_sensor_mode->data;
-	//current_color_mode = 3;
-
-	/*ドロップ調査*/
-	col_mode_seq = color_sensor_mode->data;
-	if(pre_col_mode_seq+1 != col_mode_seq){
-		syslog(LOG_NOTICE, "col mode pre %d, now %d\n", pre_col_mode_seq, col_mode_seq);
-	}
-	pre_col_mode_seq = col_mode_seq;
-
-	if(col_mode_seq >= 127){
-		pre_col_mode_seq = -1;
-	}
-	col_mode_cnt++;
-	/*ドロップ調査*/
 }
 
-void ultrasonic_mode_callback(const void * msgin)		//arm
+void ultrasonic_mode_callback(const void * msgin)
 {
 	const std_msgs__msg__Int8 * ultrasonic_sensor_mode = (const std_msgs__msg__Int8 *)msgin;
 
 	current_ultrasonic_mode = ultrasonic_sensor_mode->data;
 }
 
-void imu_init_callback(const void * msgin)		//arm
+void imu_init_callback(const void * msgin)
 {
 	const std_msgs__msg__Bool * imu_init = (const std_msgs__msg__Bool *)msgin;
 
@@ -526,7 +448,7 @@ uros_task(intptr_t exinf)
 	RCCHECK(rclc_subscription_init_default(&ultrasonic_mode_subscriber, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int8), "ultrasonic_sensor_mode"));
 	RCCHECK(rclc_subscription_init_default(&imu_init_subscriber, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Bool), "imu_init"));
 
-	// Create a 2 seconds button timer,
+	// Create timer,
 	rcl_timer_t timer;
 	RCCHECK(rclc_timer_init_default(&timer, &support, RCL_MS_TO_NS(10), timer_callback));
 
@@ -539,7 +461,6 @@ uros_task(intptr_t exinf)
 	RCCHECK(rclc_executor_add_subscription(&executor, &color_mode_subscriber, &color_sensor_mode, &color_mode_callback, ON_NEW_DATA));
 	RCCHECK(rclc_executor_add_subscription(&executor, &ultrasonic_mode_subscriber, &ultrasonic_sensor_mode, &ultrasonic_mode_callback, ON_NEW_DATA));
 	RCCHECK(rclc_executor_add_subscription(&executor, &imu_init_subscriber, &imu_init, &imu_init_callback, ON_NEW_DATA));
-	// Create and allocate the  messages
 
 
     syslog(LOG_NOTICE, "miro-ROS main task : init done.");
@@ -551,7 +472,7 @@ uros_task(intptr_t exinf)
     {
         bool reset_count = true;
         r_err = pup_motor_setup(r_motor, PUP_DIRECTION_CLOCKWISE, true);
-        pup_motor_reset_count(r_motor);     //??
+        pup_motor_reset_count(r_motor);
         if(r_err != PBIO_ERROR_AGAIN){
             break;
         }
@@ -562,7 +483,7 @@ uros_task(intptr_t exinf)
     /*set up left motor*/
     for(int i = 0; i < 10; i++){
         l_err = pup_motor_setup(l_motor, PUP_DIRECTION_COUNTERCLOCKWISE, true);
-        pup_motor_reset_count(l_motor);     //??
+        pup_motor_reset_count(l_motor);
         if(l_err != PBIO_ERROR_AGAIN){
             break;
         }
@@ -573,7 +494,7 @@ uros_task(intptr_t exinf)
     /*set up arm motor*/
     for(int i = 0; i < 10; i++){
         a_err = pup_motor_setup(a_motor, PUP_DIRECTION_CLOCKWISE, true);
-        pup_motor_reset_count(a_motor);     //??
+        pup_motor_reset_count(a_motor);
         if(a_err != PBIO_ERROR_AGAIN){
             break;
         }
@@ -582,8 +503,6 @@ uros_task(intptr_t exinf)
     }
 
     hub_imu_init();
-
-	syslog(LOG_NOTICE, "SPIKE init done.");
 
 	send_color_value_1 = 0;
     send_color_value_2 = 0;
@@ -594,8 +513,13 @@ uros_task(intptr_t exinf)
     current_color_mode = 0;
     current_ultrasonic_mode = 0;
 
+	syslog(LOG_NOTICE, "SPIKE init done.");
+
     hub_display_off();
     hub_display_orientation(PBIO_SIDE_TOP);
+    pup_ultrasonic_sensor_light_set(ult, 60, 60, 60, 60);
+    hub_display_image(text_ET);         //ディスプレイ表示
+    hub_light_off();
 
 	while(1){
 		rclc_executor_spin(&executor);
