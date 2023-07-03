@@ -9,7 +9,7 @@
     - デフォルトでは`app_timer()`は10ms周期で呼ばれる
         - `create_timer(()`の第一引数を変更することで周期を変更できる
         - 10msより短い周期の動作確認は行っていない
-    - APIはリファレンス([api_reference.md](./api_reference.md))を参照
+    - APIはリファレンス([API_REFERENCE.md](./API_REFERENCE.md))を参照
 - libフォルダ内のファイル
     - APIのライブラリ等
 
