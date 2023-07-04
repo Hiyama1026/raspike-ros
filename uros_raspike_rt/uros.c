@@ -43,24 +43,18 @@
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
 
 
-#if 0
-static pup_color_hsv_t detect_color_for_lego_official[] = {
+static pup_color_hsv_t raspike_rt_detectable_color[] = {
     { PBIO_COLOR_HUE_RED, 0b01100100, 0b01100100 },
-    { PBIO_COLOR_HUE_ORANGE, 0b01100100, 0b01100100 },
     { PBIO_COLOR_HUE_YELLOW, 0b01100100, 0b01100100 },
     { PBIO_COLOR_HUE_GREEN, 0b01100100, 0b01100100 },
-    { PBIO_COLOR_HUE_SPRING_GREEN, 0b01100100, 0b01100100 }, 
-    { PBIO_COLOR_HUE_CYAN, 0b01100100, 0b01100100 }, 
     { PBIO_COLOR_HUE_BLUE, 0b01100100, 0b01100100 }, 
-    { PBIO_COLOR_HUE_VIOLET, 0b01100100, 0b01100100 }, 
-    { PBIO_COLOR_HUE_MAGENTA, 0b01100100, 0b01100100 }, 
-    {0, 0, 0b01100100},         //WHITE
-    {0, 0, 0b1010},             //BRACK
-    {0, 0, 0} ,                //NON
+    {0, 0, 0b01100100},     //WHITE
+    {0, 0, 0b1010},         //BRACK
+    {0, 0, 0} ,             //NON
 };
-#endif
 
-static pup_color_hsv_t detect_color_for_EV3[] = {
+#if 0
+static pup_color_hsv_t detectable_color_for_EV3[] = {
     { PBIO_COLOR_HUE_RED, 0b01100100, 0b01100100 },
     { PBIO_COLOR_HUE_YELLOW, 0b01100100, 0b01100100 },
     { PBIO_COLOR_HUE_GREEN, 0b01100100, 0b01100100 }, 
@@ -70,7 +64,7 @@ static pup_color_hsv_t detect_color_for_EV3[] = {
     {0, 0, 0b1010},                             //BRACK
     {0, 0, 0} ,                                 //NON
 };
-
+#endif
 
 rcl_publisher_t dev_status_publisher;
 rcl_publisher_t button_status_publisher;
@@ -131,7 +125,7 @@ void get_color_code(void){
     pup_color_hsv_t tmp_color_val;
 
     tmp_color_val = pup_color_sensor_color(col, true);
-#if 1
+#if 0
     // for EV3
     switch (tmp_color_val.h){
         case 0:
@@ -165,49 +159,33 @@ void get_color_code(void){
     }
 #endif
 
-#if 0      
-    //for lego official
+#if 1      
     switch(tmp_color_val.h){
         case 0:            
             if(tmp_color_val.s == 100){             //RED (PBIO_COLOR_HUE_RED=0)
-                send_color_value_1 = 9;
+                send_color_value_1 = 1;
             }
             else if(tmp_color_val.v == 100){        //WHITE
-                send_color_value_1 = 10;
+                send_color_value_1 = 5;
             }
             else if(tmp_color_val.v == 10){         //BRACK
-                send_color_value_1 = 0;
+                send_color_value_1 = 6;
             }
             else{
-                send_color_value_1 = -1;            //NONE
+                send_color_value_1 = 0;            //NONE
             }
             break;
-        case PBIO_COLOR_HUE_ORANGE:
-            send_color_value_1 = 8;
-            break;
         case PBIO_COLOR_HUE_YELLOW:
-            send_color_value_1 = 7;
-            break;
-        case PBIO_COLOR_HUE_GREEN:
-            send_color_value_1 = 6;
-            break;
-        case PBIO_COLOR_HUE_SPRING_GREEN:
-            send_color_value_1 = 5;
-            break;
-        case PBIO_COLOR_HUE_CYAN:
-            send_color_value_1 = 4;
-            break;
-        case PBIO_COLOR_HUE_BLUE:
-            send_color_value_1 = 3;
-            break;
-        case PBIO_COLOR_HUE_VIOLET:
             send_color_value_1 = 2;
             break;
-        case PBIO_COLOR_HUE_MAGENTA:
-            send_color_value_1 = 1;
+        case PBIO_COLOR_HUE_GREEN:
+            send_color_value_1 = 3;
+            break;
+        case PBIO_COLOR_HUE_BLUE:
+            send_color_value_1 = 4;
             break;
         default:
-            send_color_value_1 = -2;
+            send_color_value_1 = -2;                //err
     }
 #endif
     send_color_value_2 = 0;
@@ -465,7 +443,7 @@ uros_task(intptr_t exinf)
 
     syslog(LOG_NOTICE, "miro-ROS main task : init done.");
 
-	pup_color_sensor_detectable_colors(8, detect_color_for_EV3);    //lego公式APIに合わせる場合はpup_color_sensor_detectable_colors(12, detect_color_for_lego_official)
+	pup_color_sensor_detectable_colors(7, raspike_rt_detectable_color);    //EV3-RTのAPIに合わせる場合はpup_color_sensor_detectable_colors(8, detectable_color_for_EV3)
 
     /*set up right motor*/
     for(int i = 0; i < 10; i++)

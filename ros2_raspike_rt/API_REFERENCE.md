@@ -2,25 +2,25 @@
 
 ## モーター
 ### <関数>
-- void [set_wheel_speed](#void-motorset_wheel_speedint8-wheel_left_speed-int8-wheel_right_speed)(int8 wheel_left_speed, int8 wheel_right_speed)
-- void [set_left_motor_speed](#void-motorset_left_motor_speedint8-wheel_left_speed)(int8 wheel_left_speed)
-- void [set_right_motor_speed](#void-motorset_right_motor_speedint8-wheel_right_speed)(int8 wheel_right_speed)
-- void [set_arm_motor_speed](#void-motorset_arm_motor_speedint8-arm_speed)(int8 arm_speed)
-- void [wheel_motor_stop](#void-motorwheel_motor_stopvoid)(void)
-- void [right_motor_stop](#void-motorright_motor_stopvoid)(void)
-- void [left_motor_stop](#void-motorleft_motor_stopvoid)(void)
-- void [arm_motor_stop](#void-motorarm_motor_stopvoid)(void)
-- void [wheel_motor_brake](#void-motorwheel_motor_brakevoid)(void)
-- void [right_motor_brake](#void-motorright_motor_brakevoid)(void)
-- void [left_motor_brake](#void-motorleft_motor_brakevoid)(void)
-- void [arm_motor_brake](#void-motorarm_motor_brakevoid)(void)
-- int32 [get_right_motor_count](#int32-motorget_right_motor_countvoid)(void)
-- int32 [get_left_motor_count](#int32-motorget_left_motor_countvoid)(viod)
-- int32 [get_arm_motor_count](#int32-motorget_arm_motor_countvoid)(viod)
-- void [wheel_motor_reset_count](#void-motorwheel_motor_reset_countvoid)(void)
-- void [right_motor_reset_count](#void-motorright_motor_reset_countvoid)(void)
-- void [left_motor_reset_count](#void-motorleft_motor_reset_countvoid)(void)
-- void [arm_motor_reset_count](#void-motorarm_motor_reset_countvoid)(void)
+- void [motor.set_wheel_speed](#void-motorset_wheel_speedint8-wheel_left_speed-int8-wheel_right_speed)(int8 wheel_left_speed, int8 wheel_right_speed)
+- void [motor.set_left_motor_speed](#void-motorset_left_motor_speedint8-wheel_left_speed)(int8 wheel_left_speed)
+- void [motor.set_right_motor_speed](#void-motorset_right_motor_speedint8-wheel_right_speed)(int8 wheel_right_speed)
+- void [motor.set_arm_motor_speed](#void-motorset_arm_motor_speedint8-arm_speed)(int8 arm_speed)
+- void [motor.wheel_motor_stop](#void-motorwheel_motor_stopvoid)(void)
+- void [motor.right_motor_stop](#void-motorright_motor_stopvoid)(void)
+- void [motor.left_motor_stop](#void-motorleft_motor_stopvoid)(void)
+- void [motor.arm_motor_stop](#void-motorarm_motor_stopvoid)(void)
+- void [motor.wheel_motor_brake](#void-motorwheel_motor_brakevoid)(void)
+- void [motor.right_motor_brake](#void-motorright_motor_brakevoid)(void)
+- void [motor.left_motor_brake](#void-motorleft_motor_brakevoid)(void)
+- void [motor.arm_motor_brake](#void-motorarm_motor_brakevoid)(void)
+- int32 [motor.get_right_motor_count](#int32-motorget_right_motor_countvoid)(void)
+- int32 [motor.get_left_motor_count](#int32-motorget_left_motor_countvoid)(viod)
+- int32 [motor.get_arm_motor_count](#int32-motorget_arm_motor_countvoid)(viod)
+- void [motor.wheel_motor_reset_count](#void-motorwheel_motor_reset_countvoid)(void)
+- void [motor.right_motor_reset_count](#void-motorright_motor_reset_countvoid)(void)
+- void [motor.left_motor_reset_count](#void-motorleft_motor_reset_countvoid)(void)
+- void [motor.arm_motor_reset_count](#void-motorarm_motor_reset_countvoid)(void)
 
 
 ### <関数詳解>
@@ -172,16 +172,14 @@
 ### <カラーコード>
 |color code|color|
 |---|---|
-|1||
-|2||
-|3||
-|4||
-|5||
-|6||
-|7||
-|||
-|||
-
+|0|NONE|
+|1|RED|
+|2|YELLOW|
+|3|GREEN|
+|4|BLUE|
+|5|WHILE|
+|6|BRACK|
+|-2|err|
 
 ### <関数>
 - void [color_sensor.set_color_mode](#void-color_sensorset_color_modeint8-color_mode)(int8 color_mode)
@@ -223,6 +221,7 @@
 
 ### int16 color_sensor.get_color_code(void)
 色(カラーコード)を取得する．<BR>
+カラーコードをEV3-RTと同じものにしたい場合は，uros.cの`raspike_rt_detectable_color`を`detectable_color_for_EV3`に変更する．<BR>
 モードが切り替わる前に呼ばれた場合はエラーコードとして **-1** を返す．
 - 引数
     - 無し
