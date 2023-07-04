@@ -46,6 +46,13 @@
     - `micro-ROS_ASP3\spike-rt`に置く
     - SPIKEをDFUモードにして書き込む
 
+## カスタムメッセージ型 メッセージ内容
+- SPIKE(uRPS) → rasberryPi(ROS2)<BR>
+![to_rpi_message](./imgs/to_rpi_msg_contents.png)
+
+- rasberryPi(ROS2) → SPIKE(uROS) <BR>
+![to_spike_message](./imgs/to_spike_msg_contents.png)
+
 ## 設計メモ
 - uROS(SPIKE)側のQoSについて
     - uROS側で10ms周期で送信するトピックのQoSをRELIABLEにすると，uROS側のサブスクライバーがデータをドロップすることを確認．
@@ -69,4 +76,3 @@
     - SPIKE(uros.c)は，押されているボタンに応じたコマンドを送信している.
     - コマンドの値はrasPike環境に揃えている．
     
-

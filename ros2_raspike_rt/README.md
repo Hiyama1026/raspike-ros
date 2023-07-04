@@ -23,3 +23,7 @@ $ . install/setup.bash
 ```
 - 実行は下記のコマンド
     - `$ ros2 run ros2_raspike_rt rpi_ros2_node`
+
+## その他
+- ROS2のセットアップが成功(uROSエージェントとの接続が成功)するとhubのディスプレイに「ET」の文字が表示される
+    - 失敗するとディスプレイに顔文字を表示する

@@ -235,9 +235,3 @@ class send_data_class:
         return self.__imu_init
 
 send_data = send_data_class()
-
-'''
-ToDo
-
-rgb挙動確認
-'''
