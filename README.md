@@ -19,7 +19,7 @@
 
 ## 使用方法
 - linetrace_sample
-    - ROS2アプリケーションのサンプル
+    - uROS(uros_raspike-rt)と通信して動作するROS2アプリケーションのサンプル
     - ライントレースプログラム
     - rasberryPi上で実行
     - `<ROS2ワークスペース>\src`に置いてビルド
@@ -36,6 +36,7 @@
         - Pythonによるアプリ開発が可能
         - APIは[APIリファレンス](./ros2_raspike_rt/API_REFERENCE.md)を参照
         - アプリケーションの裏でROS2プログラムが稼働する
+            - uros_raspike-rtと通信する
     - appNodeクラス内の`app_timer()`に処理を記述する
         - 周期的に呼ばれる
         - サンプルとしてライントレースプログラムが書かれている
