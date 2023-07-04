@@ -1,5 +1,13 @@
 # API Reference
 
+## モジュール
+- [モーター](#モーター)
+- [カラーセンサー](#カラーセンサー)
+- [超音波センサー](#超音波センサー)
+- [IMU](#imu)
+- [ボタン](#ボタン)
+- [Hub Power Status](#hub-power-status)
+
 ## モーター
 ### <関数>
 - void [motor.set_wheel_speed](#void-motorset_wheel_speedint8-wheel_left_speed-int8-wheel_right_speed)(int8 wheel_left_speed, int8 wheel_right_speed)
@@ -113,21 +121,21 @@
 - 引数
     - 無し
 - 戻り値
-    - エンコーダーの値
+    - エンコーダーの値[°]
 
 ### int32 motor.get_left_motor_count(void)
 左モーターのエンコーダー値を取得する．
 - 引数
     - 無し
 - 戻り値
-    - エンコーダーの値
+    - エンコーダーの値[°]
 
 ### int32 motor.get_arm_motor_count(void)
 アームモーターのエンコーダー値を取得する．
 - 引数
     - 無し
 - 戻り値
-    - エンコーダーの値
+    - エンコーダーの値[°]
 
 ### void motor.wheel_motor_reset_count(void)
 左右の車輪用モーターのエンコーダ値をリセットする．
@@ -345,6 +353,15 @@ X軸方向の角速度を取得する．
 
 
 ## ボタン
+
+### ボタンコマンド
+|button|command|
+|---|---|
+|LEFT|cmd += 1|
+|RIGHT|cmd += 2|
+|CENTER|cmd += 16|
+|BLUETOOTH|bt_cmd = 2048|
+
 ### <関数>
 - bool [button.is_center_pressed](#bool-buttonis_center_pressedvoid)(void)
 - bool [button.is_left_pressed](#bool-buttonis_left_pressedvoid)(void)
