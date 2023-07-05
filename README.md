@@ -28,10 +28,9 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
     - [linetrace_sample](./linetrace_sample/)のようにROS2タスク内に直接処理を記述する方法
 ## ファイル構成
 - bin
-    - [uros_raspike-rt](./uros_raspike_rt)パッケージのバイナリファイル
-    - SPIKE-RT上で稼働する，ROS2(rasberryPi)と通信するためのuROSプログラム
+    - [uros_raspike-rt](./uros_raspike_rt)パッケージのバイナリファイル(asp.dfu)を書き込むためのパッケージ
+        - SPIKE-RT上で稼働する，ROS2(rasberryPi)と通信するためのuROSプログラム
     - DFUモードでSPIKEに書き込んで使用する
-    - 使用方法は後述
 
 - raspike_uros_msg
     - メッセージ型定義用パッケージ
@@ -49,7 +48,7 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
     - `ros2_raspike_rt\ros2_raspike_rt\rpi_ros2_node.py`
         - uROSからのセンサ値の受信・app_node.pyで計算された指令値の送信を行うROS2プログラム
             - app_node.pyからAPIを介して指令値が渡される
-            - uros_raspike-rtと通信する
+            - uros_raspike-rt(SPIKE)と通信する
     - `ros2_raspike_rt\ros2_raspike_rt\lib\*.py`
         - APIのライブラリ等    
 
@@ -179,13 +178,13 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
 
 ## SPIKE側の環境構築
 1. SPIKEをDFUモードにする
-    - SPIKEのbluetooth(BT)ボタンを押したままPCをSPIKEをケーブルで接続し，BTボタンを離さずにSPIKEの電源を入れる
-    - BTボタンが，「ピンク色に点灯」→「虹色に点滅」になったら成功
+    - SPIKEのbluetooth(BT)ボタンを押したままPCをSPIKEをUSBケーブルで接続する
+    - BTボタンが，「ピンク色に点灯」→「虹色に点滅」になるまで押し続ける
 
 1. binフォルダからasp.dfuを書き込む
     - (注)pyusbが必要
     ```bash
-    $ cd bin
+    $ cd uros_raspike-rt/bin
     $ sudo python3 ./pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
     ```
 
