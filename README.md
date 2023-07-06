@@ -118,7 +118,7 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
         - raspike_uros_msg
         - ros2_raspike_rt
         - linetrace_sample
-            - （※）ros2_raspike_rtとlinetrace_sampleはどちらか片方でも構わない
+            - （※）ros2_raspike_rtとlinetrace_sampleは使用する方のみでも構わない
 
 1. ROS2パッケージをビルドする
     ```bash
