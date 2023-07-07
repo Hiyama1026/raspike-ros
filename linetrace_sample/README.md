@@ -41,7 +41,7 @@
     - ファイルを作成
         ```bash
         $ cd src/[パッケージ名]/[パッケージ名]
-        & touch [ノード名].py
+        $ touch [ノード名].py
         ```
     - `[ノード名].py`に処理を記述
         - lt_sample_node.pyの中身をコピーする場合はノード名(lt_sample_node)を変更する
