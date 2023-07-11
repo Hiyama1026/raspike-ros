@@ -1,39 +1,69 @@
 # ROS通信によるETロボコン走行体の制御アプリケーション開発用プラットフォーム
-ROSによるETロボコン用走行体の制御アプリケーション，およびアプリケーション開発用ソフトウェアプラットフォーム
+本ソフトウェアはROS2によりETロボコン用走行体を制御するためのソフトウェアプラットホームである．
+
+本ソフトウェアを持ちることよりROS2のプログラムによりETロボコン用走行体を制御することが可能である．
+
 
 # 動作環境
-- SPIKE側
-    - spike-rt(OS)とmicro-ROS_ASP3を使用
-        - この2つはSPIKE上で稼働するmicro-ROS(uROS)プログラム[uros_raspike-rt](./uros_raspike_rt)に変更を加えたい場合に限り，インストールが必要
-            - 変更を加える必要が無い場合は[bin](./bin/)フォルダからSPIKEにバイナリを書き込むだけで実行が可能
-    - Git Hub
-        - [micro-ROS_ASP3](https://github.com/exshonda/micro-ROS_ASP3)
-        - [spike-rt](https://github.com/spike-rt/spike-rt)
-- rasberryPi側
+
+- SPIKE
+   - micro-ROS(uROS)ファームウェア[uros_raspike-rt](./uros_raspike_rt)
+        - SPIKE上で動作し，各種センサー値をpublishし，モータ制御値をsubscribeする
+        - プリビルドバイナリを用意（[asp.dfu](./bin/asp.dfu))
+        - [spike-rt](https://github.com/spike-rt/spike-rt)と[micro-ROS_ASP3](https://github.com/exshonda/micro-ROS_ASP3)を使用
+            - ファームウェアに変更を加えたい場合に限りインストールが必要
+
+- rasberryPi
     - rasberryPi OS(64bit)
     - ROS2 Humble
-
 - 動作確認済みのバージョン
     - micro-ROS_ASP3
-        - コミット識別番号：3a306729a797d0f4976daab50c5698acffe38a12
-        - [Git Hub](https://github.com/exshonda/micro-ROS_ASP3/tree/3a306729a797d0f4976daab50c5698acffe38a12)
+        - コミットID：[3a306729a797d0f4976daab50c5698acffe38a12](https://github.com/exshonda/micro-ROS_ASP3/tree/3a306729a797d0f4976daab50c5698acffe38a12)
     - spike-rt
-        - コミット識別番号：f6724115b0ef8c8367a760eaec2840089e6b4e55
-        - [Git Hub](https://github.com/spike-rt/spike-rt/tree/f6724115b0ef8c8367a760eaec2840089e6b4e55)
+        - コミットID：[f6724115b0ef8c8367a760eaec2840089e6b4e55](https://github.com/spike-rt/spike-rt/tree/f6724115b0ef8c8367a760eaec2840089e6b4e55)
 
-# 特徴・ファイル構成
-## 特徴
-- 2種類の方法でアプリを開発できる
-    - [app_node.py](./ros2_raspike_rt/ros2_raspike_rt/app_node.py)(ros2_raspike_rt)内の`app_timer()`で，[専用API](./ros2_raspike_rt/API_REFERENCE.md)を使用して開発する方法
-    - [linetrace_sample](./linetrace_sample/)のようにROS2タスク内に直接処理を記述する方法
-## ファイル構成
+- SPIKEとRasberryPiの接続・SPIKEと、センサー、モーターの接続
+    - SPIKEとRasberryPiはシリアルで接続する
+        - 接続方法は，後述の**変更点を除いて**rasPike(ETロボコン)環境と同じ．
+            - [RasPike GitHub](https://github.com/ETrobocon/RasPike)
+            - SPIKEとRasberryPiの接続方法や，SPIKEとセンサー・モーターの接続は，「[Raspberry PiとSPIKEの接続](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)」を参照
+        - rasPikeからの変更点
+            - SPIKEとセンサー・モーターの接続ポートを一部変更
+                - 超音波センサーの接続ポートとシリアル通信のポートを入れ替えている
+                    - 本環境における，SPIKEとデバイスの接続方法
+
+                    |接続デバイス|ポート|
+                    |---|---|
+                    |アームモータ|A|
+                    |右モータ|B|
+                    |左モータ|E|
+                    |カラーセンサー|C|
+                    |serial通信|**F**|
+                    |超音波センサー|**D**|          
+    
+
+# アプリケーション構成
+- 2種類の方法でアプリを開発可能である．両者を同時に使用した場合の動作は保証しない
+    - ETロボコン走行体向けカスタムメッセージの利用
+        - [ETロボコン走行体向けカスタムメッセージ](#カスタムメッセージ仕様)を直接扱う方法
+        - サンプルプログラム : [linetrace_sample](./linetrace_sample/)
+    - ETロボコン走行体向け専用APIを使用
+        - ETロボコン走行体向けカスタムメッセージをラップした専用APIを使用する方法．
+        - [専用API仕様](./ros2_raspike_rt/API_REFERENCE.md)
+            - 時間コールバック関数である`app_timer()`内にプログラムを記述する．
+        - サンプルプログラム : [app_node.py](./ros2_raspike_rt/ros2_raspike_rt/app_node.py)
+
+
+# ファイル構成
 - bin
-    - [uros_raspike-rt](./uros_raspike_rt)パッケージのバイナリファイル(asp.dfu)を書き込むためのパッケージ
-        - SPIKE-RT上で稼働する，ROS2(rasberryPi)と通信するためのuROSプログラム
-    - DFUモードでSPIKEに書き込んで使用する
+    - asp.dfu
+        - micro-ROS(uROS)ファームウェアのプリビルドバイナリ
+        - SPIKEに書き込んで使用する
+    - pydfu.py
+        - SPIKEへの書き込みプログラム
 
 - raspike_uros_msg
-    - メッセージ型定義用パッケージ
+    - ETロボコン走行体用カスタムメッセージのメッセージ型定義用パッケージ
     - SPIKEとrasberryPiの両方で使用
         - SPIKE：`micro-ROS_ASP3\external\primehub\firmware\mcu_ws`に置く
         - rasberryPi：`<ROS2ワークスペース>\src`に置く
@@ -49,19 +79,16 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
         - uROSからのセンサ値の受信・app_node.pyで計算された指令値の送信を行うROS2プログラム
             - app_node.pyからAPIを介して指令値が渡される
             - uros_raspike-rt(SPIKE)と通信する
-    - `ros2_raspike_rt\ros2_raspike_rt\lib\*.py`
+    - `ros2_raspike_rt\ros2_raspike_rt\lib`フォルダ内のファイル
         - APIのライブラリ等    
 
 - linetrace_sample
     - uROS(uros_raspike-rt)と通信して動作するROS2アプリケーションのサンプルパッケージ
         - ROS2のタスク内に直接ライントレースの処理を記入したもの
-    - rasberryPi上で実行
-    - `<ROS2ワークスペース>\src`に置いてビルド
-    - `$ ros2 run linetrace_sample lt_sample_node`で実行
 
 - uros_raspike-rt
-    - SPIKE側で動作するuROSパッケージ
-    - SPIKEをDFUモードにして書き込む
+    - SPIKE側で動作するuROSパッケージのソースコード
+
 
 # 使用方法(uROSプログラムに変更が必要無い場合)
 ## rasberryPi側の環境構築
@@ -127,7 +154,7 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
     ```
 
 ### エージェントのビルドと実行（方法1，2のどちらでも可）
-#### エージェントのビルドと実行　方法1
+#### エージェントのビルドと実行:方法1
 1. 参考
 
 - 下記の記事を参考にで`Micro-XRCE-DDS-Agent`をビルドする<BR>
@@ -155,13 +182,13 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
 
 - `verbose_level`を6に設定して、メッセージの受信を表示するようにする
     - 2つ目のコマンドのエージェント実行は`sudo`が必要な場合がある
-
+    - device はSPIKEと接続されているポート名(/dev/ttyXX)を指定
     ```bash
     source /opt/ros/humble/setup.bash
     MicroXRCEAgent serial --dev [device] -v 6
     ```
 
-#### エージェントのビルドと実行　方法2
+#### エージェントのビルドと実行:方法2
 1. エージェントのビルド
     ```bash
     cd uros_ws    
@@ -171,7 +198,7 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
     ```
 
 1. エージェントの実行
-
+    - device はSPIKEと接続されているポート名(/dev/ttyXX)を指定
     ```bash
     ros2 run micro_ros_agent micro_ros_agent serial --dev [device]
     ```    
@@ -181,8 +208,12 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
     - SPIKEのbluetooth(BT)ボタンを押したままPCをSPIKEをUSBケーブルで接続する
     - BTボタンが，「ピンク色に点灯」→「虹色に点滅」になるまで押し続ける
 
-1. binフォルダからasp.dfuを書き込む
-    - (注)pyusbが必要
+1. ./bin/asp.dfuを書き込む
+    - pyusbをインストール
+    ```bash
+    $ sudo pip3 install pyusb
+    ```
+    - ファームウエアの書き込み
     ```bash
     $ cd uros_raspike-rt/bin
     $ sudo python3 ./pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
@@ -263,7 +294,7 @@ ROSによるETロボコン用走行体の制御アプリケーション，およ
     $ make deploy-dfu
     ```
 
-# カスタムメッセージ型 メッセージ内容
+# カスタムメッセージ仕様
 - SPIKE(uRPS) → rasberryPi(ROS2)<BR>
 ![to_rpi_message](./imgs/to_rpi_msg_contents.png)
 

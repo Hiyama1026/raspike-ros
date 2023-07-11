@@ -66,6 +66,7 @@ class rasberryPiNode(Node):
         # motor speed パブリッシュ
         self.motor_speed_publisher.publish(motor_speed)
 
+        #color_mode.data = 4     #固定
         color_mode.data = send_data.get_rpi_color_mode_val()
         # color mode パブリッシュ
         self.color_mode_publisher.publish(color_mode)
@@ -127,6 +128,8 @@ class rasberryPiNode(Node):
         rev_data.set_x_ang_vel_val(devise_status.gyro_sensor)
         
     def button_status_on_subscribe(self, button_status):
+        #self.get_logger().info("touch_sensor : " + str(button_status.touch_sensor))
+        #self.get_logger().info("button : " + str(button_status.button))
 
         rev_data.set_button_status_val(button_status.button)
         rev_data.set_touch_sensor_status_val(button_status.touch_sensor)

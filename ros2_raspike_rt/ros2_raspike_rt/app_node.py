@@ -20,6 +20,7 @@ class appNode(Node):
         super().__init__("app_node")
         # タイマーの生成
         self.timer = self.create_timer(0.01, self.app_timer)    # 引数：タイマーコールバック呼び出し周期，タイマーコールバック関数
+        self.test_seq = 0
         self.is_start = False
         self.reflection_val = 0
         self.diff = [0, 0]
@@ -31,7 +32,7 @@ class appNode(Node):
 
 
     # センサ値取得
-    def reliable_get_reflection(self):
+    def ori_get_reflection(self):
         get_ref_value = color_sensor.get_reflection()
         while get_ref_value < 0:
             get_ref_value = color_sensor.get_reflection()
@@ -67,7 +68,40 @@ class appNode(Node):
             return
 
         color_sensor.set_color_mode(3)
-        self.reflection_val = self.reliable_get_reflection()
+        self.reflection_val = self.ori_get_reflection()
 
         self.steering_amount_calculation()
         self.motor_drive_control()
+    
+    '''
+    # テスト
+    def app_timer(self):
+        #print('test')
+
+        #print(color_sensor.get_color_code())
+        #print(color_sensor.get_reflection())
+        #print('---')
+        #motor.set_wheel_speed(self.test_seq, -self.test_seq)
+
+        #color_sensor.set_color_mode(4)
+        #got_rgb = color_sensor.get_rgb()
+        #print(got_rgb[0])
+        #print(got_rgb[1])
+        #print(got_rgb[2])
+        #print('---')
+
+        color_sensor.set_color_mode(4)
+        print(color_sensor.get_rgb_r())
+        print(color_sensor.get_rgb_g())
+        print(color_sensor.get_rgb_b())
+        print('---')
+
+        #print('---')
+        #print(int(imu.get_x_angular_velocity()))  
+        #print('     -r-')
+        #print(rev_data.get_right_count_val())
+        #print('     -l-')
+        #print(rev_data.get_left_count_val())
+
+        self.test_seq += 10
+    '''
