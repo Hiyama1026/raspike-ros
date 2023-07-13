@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor 
 import threading
 
-from .spike_val import *
+from ros2_raspike_rt.lib.spike_val import *
 
 class motorClass:
     def __init__(self):
@@ -235,3 +235,12 @@ class hubPowerClass:
         return rev_data.get_current_val()
 
 power = hubPowerClass()
+
+class speakerClass():
+    def __init__(self):
+        pass
+    
+    def play_tone(self, tone):
+        send_data.set_speaker_tone_val(tone)
+
+speaker = speakerClass()

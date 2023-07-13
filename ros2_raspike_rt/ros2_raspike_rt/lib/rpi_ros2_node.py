@@ -13,8 +13,8 @@ from rclpy.qos import QoSProfile
 from concurrent.futures import ThreadPoolExecutor 
 from rclpy.executors import MultiThreadedExecutor
 
-from .app_node import *
-from .lib.spike_val import *
+from ros2_raspike_rt import app_node
+from ros2_raspike_rt.lib.spike_val import *
 
 
 # サブスクライバーノード
@@ -36,6 +36,7 @@ class rasberryPiNode(Node):
         self.motor_reset_count_publisher = self.create_publisher(MotorResetMessage, "motor_reset_count", 10)
         self.color_mode_publisher = self.create_publisher(Int8, "color_sensor_mode", qos_profile)
         self.ultrasonic_mode_publisher = self.create_publisher(Int8, "ultrasonic_sensor_mode", 10)
+        self.speaker_publisher = self.create_publisher(Int8, "speaker_tone", 10)
         self.imu_init_publisher = self.create_publisher(Bool, "imu_init", 10)
         # タイマーの生成
         self.timer_callback = self.create_timer(0.01, self.timer_on_tick)                           #wheel_speed
@@ -54,7 +55,8 @@ class rasberryPiNode(Node):
         motor_speed = MotorSpeedMessage()
         reset_count = MotorResetMessage()
         color_mode = Int8()
-        ultrasonic_mode = Int8()   
+        ultrasonic_mode = Int8()
+        speaker_tone = Int8()
         imu_init = Bool()        
 
         motor_speed.right_motor_speed = send_data.get_right_speed_val()
@@ -90,6 +92,13 @@ class rasberryPiNode(Node):
         if self.pre_ultrasonic_mode != self.send_ultrasonic_mode:
             ultrasonic_mode.data = self.send_ultrasonic_mode
             self.ultrasonic_mode_publisher.publish(ultrasonic_mode)
+
+        # speaker
+        speaker_tone.data = send_data.get_speaker_tone_val()
+        if speaker_tone.data != 0:
+            # speaker tone パブリッシュ 
+            self.speaker_publisher.publish(speaker_tone)
+            send_data.set_speaker_tone_val(0)
 
         # imu init
         imu_init.data = send_data.get_imu_init_val()
@@ -138,30 +147,25 @@ class rasberryPiNode(Node):
         rev_data.set_voltage_val(hub_status.voltage)
         rev_data.set_current_val(hub_status.current)
 
-
-# メイン
-def main(args=None):
+# ros2 start
+def rpi_ros2_node_start(args):
     # ROS通信の初期化
     rclpy.init(args=args)
     exec = MultiThreadedExecutor()
 
     # ノードの生成
     node = rasberryPiNode()
-    app_node = appNode()
+    app = app_node.appNode()
 
     # ノード終了まで待機
     exec.add_node(node)
-    exec.add_node(app_node)
+    exec.add_node(app)
     exec.spin()
 
     # ノードの破棄
     exec.shutdown()
     node.destroy_node()
-    app_node.destroy_node()
+    app.destroy_node()
 
     # RCLのシャットダウン
     rclpy.shutdown()
-
-
-if __name__ == "__main__":
-    main()

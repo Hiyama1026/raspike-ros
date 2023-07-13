@@ -6,6 +6,7 @@
 - [超音波センサー](#超音波センサー)
 - [IMU](#imu)
 - [ボタン](#ボタン)
+- [スピーカー](#スピーカー)
 - [Hub Power Status](#hub-power-status)
 
 ## モーター
@@ -244,7 +245,7 @@
 - 戻り値
     - どの程度反射しているか[%],もしくはエラーコード(-1)
 
-### int16 color_sensor.get_rgb(void)
+### int16[3] color_sensor.get_rgb(void)
 RGB値を取得する．<BR>
 モードが切り替わる前に呼ばれた場合はエラーコードとして **-1** を返す．
 - 引数
@@ -405,6 +406,20 @@ hubのBluetoothボタンが押されているかを返す．
 - 戻り値
     - ボタンコマンド
 
+## スピーカー
+### <関数>
+- void [speaker.play_tone](#void-speakerplay_toneint8-tone)(int8 tone)
+
+### <関数詳解>
+### void speaker.play_tone(int8 tone)
+指定したトーンでスピーカーを30ms間鳴らす．<Br>
+トーンは1～10の10段階で指定できる．<Br>
+- 引数
+    - トーン(1~10)
+- 戻り値
+    - 無し
+- **注意**
+    - スピーカーが音を鳴らしている間は，センサー・アクチュエーターのステータス更新が停止する．
 
 ## Hub Power Status
 ### <関数>

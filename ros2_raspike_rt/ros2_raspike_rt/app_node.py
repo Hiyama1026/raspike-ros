@@ -1,8 +1,10 @@
 import rclpy
 from rclpy.node import Node
 
-from .lib.spike_val import *
-from .lib.api import *
+from ros2_raspike_rt.lib.rpi_ros2_node import *
+from ros2_raspike_rt.lib.spike_val import *
+from ros2_raspike_rt.lib.api import *
+
 
 white_brightness = 74
 brack_brightness = 4
@@ -12,7 +14,7 @@ right_edge = 1
 kp = 0.59
 kd = 0.04
 ki = 0.0
-bace_speed = 40
+bace_speed = 42
 
 class appNode(Node):
     # 初期化
@@ -60,6 +62,7 @@ class appNode(Node):
         send_data.set_left_speed_val(int(bace_speed + (self.steering_amount * left_edge)))
         send_data.set_right_speed_val(int(bace_speed - (self.steering_amount * left_edge)))
 
+    
     # timer callback
     def app_timer(self):
         if button.is_center_pressed():
@@ -72,36 +75,9 @@ class appNode(Node):
 
         self.steering_amount_calculation()
         self.motor_drive_control()
-    
-    '''
-    # テスト
-    def app_timer(self):
-        #print('test')
 
-        #print(color_sensor.get_color_code())
-        #print(color_sensor.get_reflection())
-        #print('---')
-        #motor.set_wheel_speed(self.test_seq, -self.test_seq)
 
-        #color_sensor.set_color_mode(4)
-        #got_rgb = color_sensor.get_rgb()
-        #print(got_rgb[0])
-        #print(got_rgb[1])
-        #print(got_rgb[2])
-        #print('---')
-
-        color_sensor.set_color_mode(4)
-        print(color_sensor.get_rgb_r())
-        print(color_sensor.get_rgb_g())
-        print(color_sensor.get_rgb_b())
-        print('---')
-
-        #print('---')
-        #print(int(imu.get_x_angular_velocity()))  
-        #print('     -r-')
-        #print(rev_data.get_right_count_val())
-        #print('     -l-')
-        #print(rev_data.get_left_count_val())
-
-        self.test_seq += 10
-    '''
+# メイン
+def main(args=None):
+    # ros2 start
+    rpi_ros2_node_start(args)

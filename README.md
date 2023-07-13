@@ -9,7 +9,7 @@
 - SPIKE
    - micro-ROS(uROS)ファームウェア[uros_raspike-rt](./uros_raspike_rt)
         - SPIKE上で動作し，各種センサー値をpublishし，モータ制御値をsubscribeする
-        - プリビルドバイナリを用意（[asp.dfu](./bin/asp.dfu))
+        - プリビルドバイナリを用意([asp.dfu](./bin/asp.dfu))
         - [spike-rt](https://github.com/spike-rt/spike-rt)と[micro-ROS_ASP3](https://github.com/exshonda/micro-ROS_ASP3)を使用
             - ファームウェアに変更を加えたい場合に限りインストールが必要
 
@@ -75,12 +75,12 @@
             - appNodeクラス内の`app_timer()`に処理を記述する
                 - 周期的に呼ばれる
         - APIは[APIリファレンス](./ros2_raspike_rt/API_REFERENCE.md)を参照
-    - `ros2_raspike_rt\ros2_raspike_rt\rpi_ros2_node.py`
-        - uROSからのセンサ値の受信・app_node.pyで計算された指令値の送信を行うROS2プログラム
-            - app_node.pyからAPIを介して指令値が渡される
-            - uros_raspike-rt(SPIKE)と通信する
     - `ros2_raspike_rt\ros2_raspike_rt\lib`フォルダ内のファイル
-        - APIのライブラリ等    
+        - ROS2処理に関するのライブラリファイル等    
+        - `rpi_ros2_node.py`
+            - uROSからのセンサ値の受信・app_node.pyで計算された指令値の送信を行うROS2プログラム
+                - app_node.pyからAPIを介して指令値が渡される
+                - uros_raspike-rt(SPIKE)と通信する
 
 - linetrace_sample
     - uROS(uros_raspike-rt)と通信して動作するROS2アプリケーションのサンプルパッケージ
@@ -232,7 +232,7 @@
 
 1. 下記のコマンドで実行
     ```bash
-    $ ros2 run ros2_raspike_rt rpi_ros2_node
+    $ ros2 run ros2_raspike_rt app_node
     ```
 
 ### linetrace_sampleを実行する場合
