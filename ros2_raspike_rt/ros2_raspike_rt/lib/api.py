@@ -238,9 +238,12 @@ power = hubPowerClass()
 
 class speakerClass():
     def __init__(self):
-        pass
+        self.lock = threading.Lock() # Lockモジュール生成
     
-    def play_tone(self, tone):
+    def play_tone(self, tone, duration):
+        self.lock.acquire()
         send_data.set_speaker_tone_val(tone)
+        send_data.set_speaker_duration_val(duration)
+        self.lock.release()
 
 speaker = speakerClass()

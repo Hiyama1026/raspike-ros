@@ -19,6 +19,7 @@
 #include "spike/pup/colorsensor.h"
 #include "spike/pup/ultrasonicsensor.h"
 #include "spike/hub/button.h"
+#include "spike/hub/speaker.h"
 #include <spike/hub/light.h>
 #include "pbio/color.h"
 #include <spike/hub/imu.h>
@@ -37,6 +38,7 @@
 #include <raspike_uros_msg/msg/spike_power_status_message.h>	//power status
 #include <raspike_uros_msg/msg/motor_speed_message.h>			//motor speed
 #include <raspike_uros_msg/msg/motor_reset_message.h>			//reset count
+#include <raspike_uros_msg/msg/speaker_message.h>			//speaker
 
 
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){error_loop(temp_rc);}}
@@ -74,14 +76,17 @@ rcl_subscription_t reset_count_subscriber;
 rcl_subscription_t color_mode_subscriber;
 rcl_subscription_t ultrasonic_mode_subscriber;
 rcl_subscription_t imu_init_subscriber;
+rcl_subscription_t speaker_subscriber;
 
 raspike_uros_msg__msg__SpikeDevStatusMessage device_status;
 raspike_uros_msg__msg__ButtonStatusMessage hub_button_msg;
 raspike_uros_msg__msg__SpikePowerStatusMessage power_msg;
 raspike_uros_msg__msg__MotorSpeedMessage motor_speed;
 raspike_uros_msg__msg__MotorResetMessage reset_count;
+raspike_uros_msg__msg__SpeakerMessage speaker_tone_val;
 std_msgs__msg__Int8 color_sensor_mode;
 std_msgs__msg__Int8 ultrasonic_sensor_mode;
+//std_msgs__msg__Int8 speaker_tone_val;
 std_msgs__msg__Bool imu_init;
 
 static pbio_error_t r_err;     
@@ -100,6 +105,8 @@ int8_t send_ultrasonic_mode_id;
 int16_t send_ultrasonic_value;
 int8_t current_color_mode;
 int8_t current_ultrasonic_mode;
+int8_t temp_speaker_frequency;
+int16_t speaker_frequency;
 static timer_count = 0;
 
 int button_state;
@@ -365,6 +372,17 @@ void reset_count_callback(const void * msgin)
 	if(reset_count->right_motor_reset)	pup_motor_reset_count(r_motor);
 }
 
+void speaker_callback(const void * msgin)
+{
+    const raspike_uros_msg__msg__SpeakerMessage * speaker_tone_val = (const raspike_uros_msg__msg__SpeakerMessage *)msgin;
+
+	temp_speaker_frequency = speaker_tone_val->tone;
+    if (temp_speaker_frequency <= 10 && temp_speaker_frequency >= 1){
+        speaker_frequency = temp_speaker_frequency * 200;
+        hub_speaker_play_tone(speaker_frequency, speaker_tone_val->duration);
+    }
+}
+
 void color_mode_callback(const void * msgin)
 {
 	const std_msgs__msg__Int8 * color_sensor_mode = (const std_msgs__msg__Int8 *)msgin;
@@ -422,6 +440,7 @@ uros_task(intptr_t exinf)
 	// Create subscriber
 	RCCHECK(rclc_subscription_init_best_effort(&motor_speed_subscriber, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(raspike_uros_msg, msg, MotorSpeedMessage), "wheel_motor_speeds"));
 	RCCHECK(rclc_subscription_init_default(&reset_count_subscriber, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(raspike_uros_msg, msg, MotorResetMessage), "motor_reset_count"));
+    RCCHECK(rclc_subscription_init_default(&speaker_subscriber, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(raspike_uros_msg, msg, SpeakerMessage), "speaker_tone"));
 	RCCHECK(rclc_subscription_init_best_effort(&color_mode_subscriber, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int8), "color_sensor_mode"));
 	RCCHECK(rclc_subscription_init_default(&ultrasonic_mode_subscriber, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int8), "ultrasonic_sensor_mode"));
 	RCCHECK(rclc_subscription_init_default(&imu_init_subscriber, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Bool), "imu_init"));
@@ -432,10 +451,11 @@ uros_task(intptr_t exinf)
 
 	// Create executor
 	rclc_executor_t executor;
-	RCCHECK(rclc_executor_init(&executor, &support.context, 6, &allocator));
+	RCCHECK(rclc_executor_init(&executor, &support.context, 7, &allocator));
 	RCCHECK(rclc_executor_add_timer(&executor, &timer));
 	RCCHECK(rclc_executor_add_subscription(&executor, &motor_speed_subscriber, &motor_speed, &motor_speed_callback, ON_NEW_DATA));
 	RCCHECK(rclc_executor_add_subscription(&executor, &reset_count_subscriber, &reset_count, &reset_count_callback, ON_NEW_DATA));
+    RCCHECK(rclc_executor_add_subscription(&executor, &speaker_subscriber, &speaker_tone_val, &speaker_callback, ON_NEW_DATA));
 	RCCHECK(rclc_executor_add_subscription(&executor, &color_mode_subscriber, &color_sensor_mode, &color_mode_callback, ON_NEW_DATA));
 	RCCHECK(rclc_executor_add_subscription(&executor, &ultrasonic_mode_subscriber, &ultrasonic_sensor_mode, &ultrasonic_mode_callback, ON_NEW_DATA));
 	RCCHECK(rclc_executor_add_subscription(&executor, &imu_init_subscriber, &imu_init, &imu_init_callback, ON_NEW_DATA));
@@ -481,6 +501,7 @@ uros_task(intptr_t exinf)
     }
 
     hub_imu_init();
+    hub_speaker_set_volume(100);
 
 	send_color_value_1 = 0;
     send_color_value_2 = 0;
@@ -511,6 +532,7 @@ uros_task(intptr_t exinf)
 	RCCHECK(rcl_subscription_fini(&reset_count_subscriber, &node));
 	RCCHECK(rcl_subscription_fini(&color_mode_subscriber, &node));
 	RCCHECK(rcl_subscription_fini(&ultrasonic_mode_subscriber, &node));
+    RCCHECK(rcl_subscription_fini(&speaker_subscriber, &node));
 	RCCHECK(rcl_subscription_fini(&imu_init_subscriber, &node));
 	RCCHECK(rcl_node_fini(&node));
 }

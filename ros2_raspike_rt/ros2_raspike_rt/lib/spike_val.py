@@ -156,6 +156,7 @@ class send_data_class:
         self.__raspi_color_sensor_mode = 0
         self.__raspi_ultrasonic_sensor_mode = 0
         self.__send_speaker_tone = 0
+        self.__send_speaker_duration = 0
         self.__imu_init = False
 
     # motor speed
@@ -235,6 +236,12 @@ class send_data_class:
 
     def get_speaker_tone_val(self):
         return self.__send_speaker_tone
+
+    def set_speaker_duration_val(self, sp_duration):
+        self.__send_speaker_duration = sp_duration
+
+    def get_speaker_duration_val(self):
+        return self.__send_speaker_duration
 
     # imu init
     def set_imu_init_val(self, is_imu_init):

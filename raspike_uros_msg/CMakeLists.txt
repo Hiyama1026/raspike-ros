@@ -31,6 +31,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SpikeDevStatusMessage.msg"
   "msg/SpikePowerStatusMessage.msg"
   "msg/MotorSpeedMessage.msg"
+  "msg/SpeakerMessage.msg"
 )
 
 ament_package()

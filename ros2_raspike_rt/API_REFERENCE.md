@@ -408,14 +408,14 @@ hubのBluetoothボタンが押されているかを返す．
 
 ## スピーカー
 ### <関数>
-- void [speaker.play_tone](#void-speakerplay_toneint8-tone)(int8 tone)
+- void [speaker.play_tone](#void-speakerplay_toneint8-tone-int16-duration)(int8 tone, int16 duration)
 
 ### <関数詳解>
-### void speaker.play_tone(int8 tone)
-指定したトーンでスピーカーを30ms間鳴らす．<Br>
+### void speaker.play_tone(int8 tone, int16 duration)
+指定したトーンでスピーカーを指定した時間だけ鳴らす．<Br>
 トーンは1～10の10段階で指定できる．<Br>
 - 引数
-    - トーン(1~10)
+    - トーン(1~10), 音を鳴らす時間[ms]
 - 戻り値
     - 無し
 - **注意**

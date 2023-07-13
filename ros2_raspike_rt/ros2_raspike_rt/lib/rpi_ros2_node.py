@@ -4,6 +4,7 @@ from std_msgs.msg import Int8
 from std_msgs.msg import Bool
 from raspike_uros_msg.msg import MotorSpeedMessage        #motor speed
 from raspike_uros_msg.msg import MotorResetMessage             #reset count
+from raspike_uros_msg.msg import SpeakerMessage
 from raspike_uros_msg.msg import SpikeDevStatusMessage
 from raspike_uros_msg.msg import ButtonStatusMessage
 from raspike_uros_msg.msg import SpikePowerStatusMessage
@@ -34,9 +35,9 @@ class rasberryPiNode(Node):
         # パブリッシャーの生成
         self.motor_speed_publisher = self.create_publisher(MotorSpeedMessage, "wheel_motor_speeds", qos_profile)
         self.motor_reset_count_publisher = self.create_publisher(MotorResetMessage, "motor_reset_count", 10)
+        self.speaker_publisher = self.create_publisher(SpeakerMessage, "speaker_tone", 10)
         self.color_mode_publisher = self.create_publisher(Int8, "color_sensor_mode", qos_profile)
         self.ultrasonic_mode_publisher = self.create_publisher(Int8, "ultrasonic_sensor_mode", 10)
-        self.speaker_publisher = self.create_publisher(Int8, "speaker_tone", 10)
         self.imu_init_publisher = self.create_publisher(Bool, "imu_init", 10)
         # タイマーの生成
         self.timer_callback = self.create_timer(0.01, self.timer_on_tick)                           #wheel_speed
@@ -54,9 +55,9 @@ class rasberryPiNode(Node):
         # メッセージの生成
         motor_speed = MotorSpeedMessage()
         reset_count = MotorResetMessage()
+        speaker_tone = SpeakerMessage()
         color_mode = Int8()
         ultrasonic_mode = Int8()
-        speaker_tone = Int8()
         imu_init = Bool()        
 
         motor_speed.right_motor_speed = send_data.get_right_speed_val()
@@ -94,8 +95,9 @@ class rasberryPiNode(Node):
             self.ultrasonic_mode_publisher.publish(ultrasonic_mode)
 
         # speaker
-        speaker_tone.data = send_data.get_speaker_tone_val()
-        if speaker_tone.data != 0:
+        speaker_tone.tone = send_data.get_speaker_tone_val()
+        if speaker_tone.tone != 0:
+            speaker_tone.duration = send_data.get_speaker_duration_val()
             # speaker tone パブリッシュ 
             self.speaker_publisher.publish(speaker_tone)
             send_data.set_speaker_tone_val(0)
