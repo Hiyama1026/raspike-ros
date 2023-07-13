@@ -1,4 +1,4 @@
-# uros_raspike_rtのプリビルドバイナリの書き込み
+# micro-ROS(uROS)ファームウェアのプリビルドバイナリの書き込み
 ## ファイル情報
 - asp.dfu：[uros_raspike_rt](../uros_raspike_rt)のプリビルドバイナリファイル
 - pydfu.py：書き込み処理を行うプログラム
