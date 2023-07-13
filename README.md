@@ -296,10 +296,10 @@
 
 # カスタムメッセージ仕様
 - SPIKE(uRPS) → rasberryPi(ROS2)<BR>
-![to_rpi_message](./imgs/to_rpi_msg_contents.png)
+![to_rpi_message](./img/to_rpi_msg_contents.png)
 
 - rasberryPi(ROS2) → SPIKE(uROS) <BR>
-![to_spike_message](./imgs/to_spike_msg_contents.png)
+![to_spike_message](./img/to_spike_msg_contents.png)
 
 # 設計メモ
 - uROS(SPIKE)側のQoSについて
