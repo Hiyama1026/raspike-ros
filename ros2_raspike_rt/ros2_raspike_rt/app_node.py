@@ -86,34 +86,6 @@ class appNode(Node):
         self.steering_amount_calculation()
         self.motor_drive_control()
     
-    '''
-    # テスト
-    def app_timer(self):
-        #print('test')
-
-        #print(color_sensor.get_color_code())
-        #print(color_sensor.get_reflection())
-        #print('---')
-        #motor.set_wheel_speed(self.test_seq, -self.test_seq)
-
-        #color_sensor.set_color_mode(4)
-        #got_rgb = color_sensor.get_rgb()
-        #print(got_rgb[0])
-        #print(got_rgb[1])
-        #print(got_rgb[2])
-        #print('---')
-
-        speaker.play_tone(self.test_seq, self.test_seq*100)
-
-        #print('---')
-        #print(int(imu.get_x_angular_velocity()))  
-        #print('     -r-')
-        #print(rev_data.get_right_count_val())
-        #print('     -l-')
-        #print(rev_data.get_left_count_val())
-
-        self.test_seq += 1
-    '''
 
 # メイン
 def main(args=None):
