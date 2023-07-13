@@ -5,16 +5,18 @@ from ros2_raspike_rt.lib.rpi_ros2_node import *
 from ros2_raspike_rt.lib.spike_val import *
 from ros2_raspike_rt.lib.api import *
 
+#white_brightness = 220
+#brack_brightness = 34
 
-white_brightness = 74
-brack_brightness = 4
+white_brightness = 200
+brack_brightness = 10
 left_edge = -1
 right_edge = 1
 
 kp = 0.59
 kd = 0.04
 ki = 0.0
-bace_speed = 42
+bace_speed = 44
 
 class appNode(Node):
     # 初期化
@@ -25,9 +27,11 @@ class appNode(Node):
         self.test_seq = 0
         self.is_start = False
         self.reflection_val = 0
+        self.rgb_val = [0, 0, 0]
         self.diff = [0, 0]
         self.pre_i_val = 0
         self.steering_amount = 0
+        self.is_first = True
 
         # ログ出力
         self.get_logger().info('app init done')
@@ -46,7 +50,7 @@ class appNode(Node):
     def steering_amount_calculation(self):
         target_brightness = (white_brightness - brack_brightness) / 2
         
-        diff_brightness = target_brightness - self.reflection_val
+        diff_brightness = target_brightness - self.rgb_val[2]
         delta_t = 10
 
         self.diff[1] = self.diff[0]
@@ -68,14 +72,20 @@ class appNode(Node):
         if button.is_center_pressed():
             self.is_start = True
         if self.is_start == False:
+            color_sensor.set_color_mode(4)
             return
+        if self.is_first:
+            speaker.play_tone(8)
+            self.is_first = False
 
-        color_sensor.set_color_mode(3)
-        self.reflection_val = self.ori_get_reflection()
+
+        color_sensor.set_color_mode(4)
+        self.rgb_val = color_sensor.get_rgb()
+        #print(self.rgb_val[2])
 
         self.steering_amount_calculation()
         self.motor_drive_control()
-
+    
 
 # メイン
 def main(args=None):
