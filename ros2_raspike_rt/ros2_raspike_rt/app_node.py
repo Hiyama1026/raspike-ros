@@ -13,8 +13,8 @@ brack_brightness = 10
 left_edge = -1
 right_edge = 1
 
-kp = 0.59
-kd = 0.04
+kp = 0.4
+kd = 0.05
 ki = 0.0
 bace_speed = 44
 
@@ -48,7 +48,7 @@ class appNode(Node):
     
     # ライントレース
     def steering_amount_calculation(self):
-        target_brightness = (white_brightness - brack_brightness) / 2
+        target_brightness = (white_brightness + brack_brightness) / 2
         
         diff_brightness = target_brightness - self.rgb_val[2]
         delta_t = 10
@@ -91,3 +91,6 @@ class appNode(Node):
 def main(args=None):
     # ros2 start
     rpi_ros2_node_start(args)
+
+if __name__ == "__main__":
+    main()
