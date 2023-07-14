@@ -111,6 +111,11 @@
     $ source /opt/ros/humble/setup.bash
     ```
 
+1. ビルドツールのインストール
+    ```bash
+    $ sudo pip install vcstool colcon-common-extensions
+    ```
+
 1. ROS環境の自動読み込み設定
     ```bash
     $ echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
