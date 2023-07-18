@@ -157,6 +157,15 @@
     $ colcon build
     $ . install/setup.bash
     ```
+1. **Cパッケージのビルド時にエラーになる場合の解決方法**
+    - CMakeのバージョンが異なる事が原因でCパッケージ(raspike_uros_msg)のビルドでエラーになる事がある．
+    - その場合は`/opt/ros/humble/opt`にある`libcurl_vendor`フォルダを削除する
+        ```bash
+        $ cd /opt/ros/humble/opt
+        $ sudo rm -rf libcurl_vendor
+        $ cd ~/ros2_ws
+        $ colcon build
+        ```
 
 ### エージェントのビルドと実行（方法1，2のどちらでも可）
 #### エージェントのビルドと実行:方法1
