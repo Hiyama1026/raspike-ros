@@ -108,6 +108,9 @@ int8_t current_ultrasonic_mode;
 int8_t temp_speaker_frequency;
 int16_t speaker_frequency;
 static timer_count = 0;
+bool speaker_enabled = false;
+int16_t speaker_play_duration = 0;
+int16_t speaker_cnt = 0;
 
 int button_state;
 int touch_sensor_state;
@@ -282,6 +285,46 @@ static int wait_for_hub_buttons(hub_button_t button_candidates)
     return button_command;
 }
 
+static void play_speaker(int code)
+{
+    switch (code)
+    {
+        case 1:
+            hub_speaker_play_tone(NOTE_C4, SOUND_MANUAL_STOP);
+            break;
+        case 2:
+            hub_speaker_play_tone(NOTE_D4, SOUND_MANUAL_STOP);
+            break;
+        case 3:
+            hub_speaker_play_tone(NOTE_E4, SOUND_MANUAL_STOP);
+            break;
+        case 4:
+            hub_speaker_play_tone(NOTE_F4, SOUND_MANUAL_STOP);
+            break;
+        case 5:
+            hub_speaker_play_tone(NOTE_G4, SOUND_MANUAL_STOP);
+            break;
+        case 6:
+            hub_speaker_play_tone(NOTE_A4, SOUND_MANUAL_STOP);
+            break;
+        case 7:
+            hub_speaker_play_tone(NOTE_B4, SOUND_MANUAL_STOP);
+            break;
+        case 8:
+            hub_speaker_play_tone(NOTE_C5, SOUND_MANUAL_STOP);
+            break;
+        case 9:
+            hub_speaker_play_tone(NOTE_D5, SOUND_MANUAL_STOP);
+            break;   
+        case 10:
+            hub_speaker_play_tone(NOTE_E5, SOUND_MANUAL_STOP);
+            break;       
+        default:
+            break;
+    }
+    return;
+}
+
 void 
 timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 {
@@ -332,6 +375,17 @@ timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 			RCSOFTCHECK(rcl_publish(&power_status_publisher, &power_msg, NULL));
 			timer_count = 0;
 		}
+
+        if (speaker_enabled){       //speaker停止処理
+            if (speaker_play_duration == speaker_cnt) {
+                hub_speaker_stop();
+                speaker_enabled = false;
+            }
+            else {
+                speaker_cnt++;
+            }
+        }
+
 	}
 }
 
@@ -377,9 +431,11 @@ void speaker_callback(const void * msgin)
     const raspike_uros_msg__msg__SpeakerMessage * speaker_tone_val = (const raspike_uros_msg__msg__SpeakerMessage *)msgin;
 
 	temp_speaker_frequency = speaker_tone_val->tone;
-    if (temp_speaker_frequency <= 10 && temp_speaker_frequency >= 1){
-        speaker_frequency = temp_speaker_frequency * 200;
-        hub_speaker_play_tone(speaker_frequency, speaker_tone_val->duration);
+    if (speaker_tone_val->tone <= 10 && speaker_tone_val->tone >= 1){
+        play_speaker(speaker_tone_val->tone);
+        speaker_play_duration = (speaker_tone_val->duration / 10);
+        speaker_enabled = true;
+        speaker_cnt = 0;
     }
 }
 

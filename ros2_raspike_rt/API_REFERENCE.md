@@ -355,7 +355,7 @@ X軸方向の角速度を取得する．
 
 ## ボタン
 
-### ボタンコマンド
+### <ボタンコマンド>
 |button|command|
 |---|---|
 |LEFT|cmd += 1|
@@ -410,6 +410,21 @@ hubのBluetoothボタンが押されているかを返す．
 ### <関数>
 - void [speaker.play_tone](#void-speakerplay_toneint8-tone-int16-duration)(int8 tone, int16 duration)
 
+### <トーン>
+|number|tone|
+|---|---|
+|1|C4|
+|2|D4|
+|3|E4|
+|4|F4|
+|5|G4|
+|6|A4|
+|7|B4|
+|8|C5|
+|9|D5|
+|10|E5|
+
+
 ### <関数詳解>
 ### void speaker.play_tone(int8 tone, int16 duration)
 指定したトーンでスピーカーを指定した時間だけ鳴らす．<Br>
@@ -419,7 +434,7 @@ hubのBluetoothボタンが押されているかを返す．
 - 戻り値
     - 無し
 - **注意**
-    - スピーカーが音を鳴らしている間は，センサー・アクチュエーターのステータス更新が停止する．
+    - 鳴らす時間は10ms単位で指定が可能．
 
 ## Hub Power Status
 ### <関数>
