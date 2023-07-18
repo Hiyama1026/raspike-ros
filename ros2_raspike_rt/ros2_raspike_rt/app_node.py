@@ -1,5 +1,6 @@
 import rclpy
 from rclpy.node import Node
+import time
 
 from ros2_raspike_rt.lib.rpi_ros2_node import *
 from ros2_raspike_rt.lib.spike_val import *
@@ -75,7 +76,8 @@ class appNode(Node):
             color_sensor.set_color_mode(4)
             return
         if self.is_first:
-            speaker.play_tone(5, 200)
+            speaker.play_tone(8, 200)
+            time.sleep(1)
             self.is_first = False
 
 
