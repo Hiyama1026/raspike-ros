@@ -222,7 +222,7 @@
     - SPIKEのbluetooth(BT)ボタンを押したままPC(RasberryPiでも可)とSPIKEをUSBケーブルで接続する
     - BTボタンが，「ピンク色に点灯」→「虹色に点滅」になるまで押し続ける
 
-1. (RasberryPi等から)./bin/asp.dfuを書き込む
+1. (RasberryPi等のPCから)uros_raspike-rt/bin/asp.dfuを書き込む
     - pyusbをインストール
     ```bash
     $ sudo pip3 install pyusb
