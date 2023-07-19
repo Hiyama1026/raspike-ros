@@ -158,7 +158,7 @@
     $ . install/setup.bash
     ```
 1. **Cパッケージのビルド時にエラーになる場合の解決方法**
-    - CMakeのバージョンが異なる事が原因でCパッケージ(raspike_uros_msg)のビルドでエラーになる事がある．
+    - Cパッケージ(raspike_uros_msg)のビルドでエラーになる事がある
     - その場合は`/opt/ros/humble/opt`にある`libcurl_vendor`フォルダを削除する
         ```bash
         $ cd /opt/ros/humble/opt
