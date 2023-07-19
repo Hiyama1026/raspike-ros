@@ -195,7 +195,7 @@
 1. 実行
 
 - `verbose_level`を6に設定して、メッセージの受信を表示するようにする
-    - 2つ目のコマンドのエージェント実行は`sudo`が必要な場合がある
+    - 2つ目のエージェントの実行コマンドは`sudo`が必要な場合がある
     - device はSPIKEと接続されているポート名(/dev/ttyXX)を指定
     ```bash
     source /opt/ros/humble/setup.bash
@@ -204,7 +204,7 @@
     - (例)シリアルの接続方法が[RasPike](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)と同じ場合
         ```
         source /opt/ros/humble/setup.bash
-        sudo MicroXRCEAgent serial --dev /dev/ttyAMA1 -v 6
+        MicroXRCEAgent serial --dev /dev/ttyAMA1 -v 6
         ```
     
 
