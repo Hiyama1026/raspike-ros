@@ -100,34 +100,34 @@
 ### ROS2のインストール
 1. アップデート
     ```bash
-    $ sudo apt update
-    $ sudo apt -y upgrade 
+    sudo apt update
+    sudo apt -y upgrade 
     ```
 
 1. ROS2パッケージをインストールする
     ```bash
-    $ wget https://s3.ap-northeast-1.wasabisys.com/download-raw/dpkg/ros2-desktop/debian/bullseye/ros-humble-desktop-0.3.1_arm64.deb
-    $ sudo apt install -y ./ros-humble-desktop-0.3.1_arm64.deb
-    $ source /opt/ros/humble/setup.bash
+    wget https://s3.ap-northeast-1.wasabisys.com/download-raw/dpkg/ros2-desktop/debian/bullseye/ros-humble-desktop-0.3.1_arm64.deb
+    sudo apt install -y ./ros-humble-desktop-0.3.1_arm64.deb
+    source /opt/ros/humble/setup.bash
     ```
 
 1. ビルドツールのインストール
     ```bash
-    $ sudo pip install vcstool colcon-common-extensions
+    sudo pip install vcstool colcon-common-extensions
     ```
 
 1. ROS環境の自動読み込み設定
     ```bash
-    $ echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-    $ source ~/.bashrc
+    echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+    source ~/.bashrc
     ```
 
 1. 動作確認
     ```bash
-    $ ros2 launch demo_nodes_cpp talker_listener.launch.py
+    ros2 launch demo_nodes_cpp talker_listener.launch.py
     ```
     - 下記のように出力されれば成功
-    ```bash
+    ```
     [INFO] [launch]: All log files can be found below /home/hiyama/.ros/log/2023-07-04-14-52-42-067659-raspi-1582
     [INFO] [launch]: Default logging verbosity is set to INFO
     [INFO] [talker-1]: process started with pid [1583]
@@ -140,9 +140,9 @@
     ```
 1. ROS2用のワークスペースを作成する
     ```bash
-    $ mkdir ros2_ws
-    $ cd ros2_ws
-    $ mkdir src
+    mkdir ros2_ws
+    cd ros2_ws
+    mkdir src
     ```
 
 1. ROS2パッケージをワークスペースに置く
@@ -154,17 +154,17 @@
 
 1. ROS2パッケージをビルドする
     ```bash
-    $ colcon build
-    $ . install/setup.bash
+    colcon build
+    . install/setup.bash
     ```
 1. **Cパッケージのビルド時にエラーになる場合の解決方法**
     - Cパッケージ(raspike_uros_msg)のビルドでエラーになる事がある
     - その場合は`/opt/ros/humble/opt`にある`libcurl_vendor`フォルダを削除する
         ```bash
-        $ cd /opt/ros/humble/opt
-        $ sudo rm -rf libcurl_vendor
-        $ cd ~/ros2_ws
-        $ colcon build
+        cd /opt/ros/humble/opt
+        sudo rm -rf libcurl_vendor
+        cd ~/ros2_ws
+        colcon build
         ```
 
 ### エージェントのビルドと実行（方法1，2のどちらでも可）
@@ -201,6 +201,12 @@
     source /opt/ros/humble/setup.bash
     MicroXRCEAgent serial --dev [device] -v 6
     ```
+    - (例)シリアルの接続方法が[RasPike](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)と同じ場合
+        ```
+        source /opt/ros/humble/setup.bash
+        sudo MicroXRCEAgent serial --dev /dev/ttyAMA1 -v 6
+        ```
+    
 
 #### エージェントのビルドと実行:方法2
 1. エージェントのビルド
@@ -225,19 +231,19 @@
 1. (RasberryPi等のPCから)uros_raspike-rt/bin/asp.dfuを書き込む
     - pyusbをインストール
     ```bash
-    $ sudo pip3 install pyusb
+    sudo pip3 install pyusb
     ```
     - ファームウエアの書き込み
     ```bash
-    $ cd uros_raspike-rt/bin
-    $ sudo python3 ./pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
+    cd uros_raspike-rt/bin
+    sudo python3 ./pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
     ```
 
 ## ROS2プログラムの実行
 - rasberryPiでagentの実行とは別のターミナルを起動して実行する．
 - コマンドのフォーマットは次の通り
     ```bash
-    $ ros2 run [パッケージ名] [ノード名]
+    ros2 run [パッケージ名] [ノード名]
     ```
 ### ros2_raspike_rtでアプリを開発・実行する場合
 1. ros2_raspike_rt/ros2_raspike_rt/app_node.pyに処理を記述
@@ -246,13 +252,13 @@
 
 1. 下記のコマンドで実行
     ```bash
-    $ ros2 run ros2_raspike_rt app_node
+    ros2 run ros2_raspike_rt app_node
     ```
 
 ### linetrace_sampleを実行する場合
 - 下記のコマンドで実行
     ```bash
-    $ ros2 run linetrace_sample lt_sample_node
+    ros2 run linetrace_sample lt_sample_node
     ```
 
 # SPIKE側のuROSプログラムを編集したい場合の環境構築方法
@@ -260,17 +266,17 @@
 ## rasberryPi側の環境構築
 - [uROSプログラムに変更が必要無い場合](#使用方法urosプログラムに変更が必要無い場合)と同じ
 ## SPIKE側の環境構築
-1. ワークスペースを作成する
+1. PC上でワークスペースを作成する
     ```bash
-    $ mkdir asp_uros_ws
-    $ cd asp_uros_ws
+    mkdir ~/asp_uros_ws
+    cd ~/asp_uros_ws
     ```
 
 1. spike-rtとmicro-ROS_ASP3をクローン
     - [動作確認済のバージョン](#動作環境)
     ```bash
-    $ git clone https://github.com/exshonda/micro-ROS_ASP3.git
-    $ git clone https://github.com/spike-rt/spike-rt.git
+    git clone https://github.com/exshonda/micro-ROS_ASP3.git
+    git clone https://github.com/spike-rt/spike-rt.git
     ```
 
 1. spike-rtとmicro-ROS_ASP3をセットアップ
@@ -287,8 +293,8 @@
     ```
     - libmicroros.a のビルドを実行
     ```bash
-    $ cd micro-ROS_ASP3\external
-    $ make build_firmware
+    cd ~/asp_uros_ws/micro-ROS_ASP3/external
+    make build_firmware
     ```
 
 1. uROSパッケージを追加・SPIKEへの書き込み
@@ -297,15 +303,15 @@
         - (※)並列ビルドでエラーになる時がある．
             - その時は2回`make asp.bin`でビルドする事ができる
     ```bash
-    $ cd ../spike-rt/uros_raspike_rt
-    $ make asp.bin
-    $ python3 ../../../spike-rt/asp3/target/primehub_gcc/tools/dfu.py -b 0x8008000:asp.bin asp.dfu
-    $ sudo python3 ../../../spike-rt/asp3/target/primehub_gcc/tools/pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
+    cd ../spike-rt/uros_raspike_rt
+    make asp.bin
+    python3 ../../../spike-rt/asp3/target/primehub_gcc/tools/dfu.py -b 0x8008000:asp.bin asp.dfu
+    sudo python3 ../../../spike-rt/asp3/target/primehub_gcc/tools/pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
     ```
     - または
     ```bash
-    $ cd ../spike-rt/uros_raspike_rt
-    $ make deploy-dfu
+    cd ../spike-rt/uros_raspike_rt
+    make deploy-dfu
     ```
 
 # カスタムメッセージ仕様
