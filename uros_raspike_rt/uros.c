@@ -13,7 +13,7 @@
 #include <micro_ros_utilities/type_utilities.h>
 #include <micro_ros_utilities/string_utilities.h>
 
-/*spike hub&pub lib*/
+/*spike hub&pup lib*/
 #include <spike/hub/display.h>
 #include "spike/pup/motor.h"
 #include "spike/pup/colorsensor.h"
