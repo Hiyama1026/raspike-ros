@@ -313,6 +313,9 @@
     cd ../spike-rt/uros_raspike_rt
     make deploy-dfu
     ```
+# 使用できるパブリッシャー・サブスクライバー
+- [linetrace_sample\README.md](./linetrace_sample/README.md/#参考1使用できるメッセージ型・パブリッシャー・サブスクライバー)を参照
+    - 注意：QoSを揃える必要がある
 
 # カスタムメッセージ仕様
 - SPIKE(uRPS) → rasberryPi(ROS2)<BR>
@@ -329,6 +332,12 @@
         - ack待ちの間は，uROSのサブスクライバーは実行を待たされる．
         - 待たされている間に次のデータが来ると，前のデータをドロップする．
     - そのため，周期送信を行うトピックのQoSはBEST-EFFORT(ackを返さない)を使用した．
+        - 以下のメッセージはBEST-EFFORTで通信する．
+            - モーターの速度指令（MotorSpeedMessage）
+            - カラーセンサーのモード指令
+            - PUPデバイスのステータス（SpikeDevStatusMessage）
+            - HUBボタンのステータス（ButtonStatusMessage）
+            - HUBの電源情報（SpikePowerStatusMessage）
 - メッセージのグループ化について
     - ROSの通信ではトピック一つにつき，比較的大きいサイズの情報が付随する．
     - 全メッセージを個別のトピックに分けるとオーバーヘッドが大きすぎるため，いくつかのメッセージを一つのトピックにグループ化した．

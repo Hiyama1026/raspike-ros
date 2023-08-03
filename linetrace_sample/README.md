@@ -20,8 +20,43 @@
     ```bash
     $ ros2 run linetrace_sample lt_sample_node
     ```
+## 参考1：使用できるメッセージ型・パブリッシャー・サブスクライバー
+(※)[rpi_ros2_node.py](../ros2_raspike_rt/ros2_raspike_rt/lib/rpi_ros2_node.py)を参考にすると良い<Br>
+- 使用できるメッセージ型（インポート方法）
+```
+from std_msgs.msg import Int8
+from std_msgs.msg import Bool
+from raspike_uros_msg.msg import MotorSpeedMessage        
+from raspike_uros_msg.msg import MotorResetMessage             
+from raspike_uros_msg.msg import SpeakerMessage
+from raspike_uros_msg.msg import SpikeDevStatusMessage
+from raspike_uros_msg.msg import ButtonStatusMessage
+from raspike_uros_msg.msg import SpikePowerStatusMessage
+```
+- 使用できるパブリッシャー・サブスクライバ
+    - QoSの設定
+    ```
+    from rclpy.qos import QoSProfile    # インポート
 
-## 参考：ROS2アプリケーションを新規に作成する方法
+    qos_profile = QoSProfile(depth=10, reliability=2)   # BEST_EFFORTの設定のため
+    ```
+    - パブリッシャー・サブスクライバの生成API一覧
+    ```
+    # パブリッシャーの生成
+    create_publisher(MotorSpeedMessage, "wheel_motor_speeds", qos_profile)
+    create_publisher(MotorResetMessage, "motor_reset_count", 10)
+    create_publisher(SpeakerMessage, "speaker_tone", 10)
+    create_publisher(Int8, "color_sensor_mode", qos_profile)
+    create_publisher(Int8, "ultrasonic_sensor_mode", 10)
+    create_publisher(Bool, "imu_init", 10)
+
+    # サブスクライバーの生成
+    create_subscription(SpikeDevStatusMessage, "spike_device_status", [コールバック], qos_profile)
+    create_subscription(ButtonStatusMessage, "spike_button_status", [コールバック], qos_profile)
+    create_subscription(SpikePowerStatusMessage, "spike_power_status", [コールバック], qos_profile)
+    ```
+
+## 参考2：ROS2アプリケーションを新規に作成する方法
 1. 下記のコマンドでROS2パッケージを新規作成
     ```bash
     $ cd ~/ros2_ws/src
