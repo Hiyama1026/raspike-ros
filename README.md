@@ -97,6 +97,25 @@
 - インストラーからrasberryPi OS(64bit)をインストール
     - ROSを動かすために64bit版をインストールする
 
+### GPIOの接続を有効にする
+1. 下記のコマンドで設定ファイルを開く
+    ```bash
+    sudo nano /boot/config.txt
+    ```
+
+1. config.txtの最後に下記を追加
+    ```bash
+    dtoverlay=uart5
+    ```
+    
+1. リブートする
+    ```bash
+    sudo reboot
+    ```
+
+1. シリアル通信のケーブルをrasberryPiに接続する
+    - 参考：[RasPike](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)
+
 ### ROS2のインストール
 1. アップデート
     ```bash
@@ -239,24 +258,34 @@
     sudo python3 ./pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
     ```
 
+1. SPIKEとrasberryPiをシリアルで接続する
+    - シリアル通信用のケーブルはSPIKEのポートFに接続する
+    - その他の各種センサー・アクチュエーターも[動作環境](#動作環境)で紹介した通りのポートに接続する
+
 ## ROS2プログラムの実行
-- rasberryPiでagentの実行とは別のターミナルを起動して実行する．
-- コマンドのフォーマットは次の通り
-    ```bash
-    ros2 run [パッケージ名] [ノード名]
-    ```
+- rasberryPiでagentの実行とは別のターミナルを起動してROS2プログラムを実行する
+    - ROS2プログラム実行のコマンドのフォーマットは次の通り
+        ```bash
+        ros2 run [パッケージ名] [ノード名]
+        ```
 ### ros2_raspike_rtでアプリを開発・実行する場合
 1. ros2_raspike_rt/ros2_raspike_rt/app_node.pyに処理を記述
     - `app_timer()`はデフォルトでは10ms周期で呼び出される
     - [APIリファレンス](./ros2_raspike_rt/API_REFERENCE.md)
-
-1. 下記のコマンドで実行
+1. 一つ目のrasberryPiのターミナルでエージェントを実行する
+1. SPIKEの電源を入れる
+    - 必ず，「エージェントの実行」→「SPIKEの起動」の順番である必要がある
+    - Hubのディスプレイに「ET」の文字が表示されたら，エージェントとの接続が完了している
+    - ディスプレイに顔が表示される場合はエージェントとの接続が失敗している
+1. 二つ目のrasberryPiのターミナルで下記のコマンドを入力し，アプリを実行する
     ```bash
     ros2 run ros2_raspike_rt app_node
     ```
 
 ### linetrace_sampleを実行する場合
-- 下記のコマンドで実行
+1. 一つ目のrasberryPiのターミナルでエージェントを実行する
+1. SPIKEの電源を入れる
+1. 二つ目のrasberryPiのターミナルで下記のコマンドを入力し，アプリを実行する
     ```bash
     ros2 run linetrace_sample lt_sample_node
     ```
@@ -313,6 +342,9 @@
     cd ../spike-rt/uros_raspike_rt
     make deploy-dfu
     ```
+## SPIKEとrasberryPiの接続・ROS2アプリの実行
+- 接続方法，ROS2アプリの実行方法の基本的な流れは[uROSプログラムに変更が必要無い場合](#使用方法urosプログラムに変更が必要無い場合)と同じ
+
 # 使用できるパブリッシャー・サブスクライバー
 - [linetrace_sample\README.md](./linetrace_sample/README.md/#参考1使用できるメッセージ型・パブリッシャー・サブスクライバー)を参照
     - 注意：QoSを揃える必要がある
