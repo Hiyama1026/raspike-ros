@@ -279,8 +279,16 @@
     - ディスプレイに顔が表示される場合はエージェントとの接続が失敗している
 1. 二つ目のrasberryPiのターミナルで下記のコマンドを入力し，アプリを実行する
     ```bash
+    cd ~/ros2_ws
+    . install/setup.bash
     ros2 run ros2_raspike_rt app_node
     ```
+    - ROS2のプログラムを変更したら，その度に下記のコマンドを実行する必要がある
+        ```bash
+        cd ~/ros2_ws
+        colcon build
+        . install/setup.bash
+        ```
 
 ### linetrace_sampleを実行する場合
 1. 一つ目のrasberryPiのターミナルでエージェントを実行する
