@@ -58,7 +58,6 @@ class linetracerNode(Node):
         self.rev_right_cnt = 0
         self.rev_left_cnt = 0
         self.rev_x_ang_vel = 0.0
-        self.rev_touch_sensor_val = 0
         self.rev_button_val = 0
         self.rev_hub_volt = 0
         self.rev_hub_current = 0
@@ -66,9 +65,6 @@ class linetracerNode(Node):
         self.send_arm_speed = 0
         self.send_right_speed = 0
         self.send_left_speed = 0
-        self.send_arm_stop_or_brake = 0
-        self.send_right_stop_or_brake = 0
-        self.send_left_stop_or_brake = 0
         self.send_is_arm_reset_cnt = False
         self.send_is_right_reset_cnt = False
         self.send_is_left_reset_cnt = False
@@ -110,17 +106,6 @@ class linetracerNode(Node):
 
         if self.rev_color_mode == 3:
             self.is_rev_reflection =  True
-
-    # color codeを取得
-    def get_color_code(self):
-        if self.send_color_mode != 2:
-            send_color_mode = 2
-            color_mode = Int8()
-            color_mode.data = send_color_mode
-            self.color_mode_publisher.publish(color_mode)
-
-        if self.rev_color_mode == 2:
-            self.is_rev_color_code = True
             
     def steering_amount_calculation(self):
         target_brightness = (white_brightness - brack_brightness) / 2
@@ -172,17 +157,10 @@ class linetracerNode(Node):
     def timer_on_tick(self):
         # メッセージの生成
         motor_speed = MotorSpeedMessage()
-        reset_count = MotorResetMessage()
-        color_mode = Int8()
-        ultrasonic_mode = Int8()
-        imu_init = Bool()
 
         motor_speed.right_motor_speed = self.send_right_speed
         motor_speed.left_motor_speed = self.send_left_speed
         motor_speed.arm_motor_speed = self.send_arm_speed
-        motor_speed.right_motor_stop_brake = self.send_right_stop_or_brake
-        motor_speed.left_motor_stop_brake = self.send_left_stop_or_brake
-        motor_speed.arm_motor_stop_brake = self.send_arm_stop_or_brake
         # メッセージのパブリッシュ
         self.motor_speed_publisher.publish(motor_speed)
 
@@ -214,7 +192,6 @@ class linetracerNode(Node):
         self.get_logger().info("button : " + str(button_status.button))
 
         self.rev_button_val = button_status.button
-        self.rev_touch_sensor_val = button_status.touch_sensor
 
     def hub_status_on_subscribe(self, hub_status):
 
