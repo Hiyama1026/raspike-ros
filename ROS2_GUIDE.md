@@ -75,6 +75,8 @@
         create_subscription(ButtonStatusMessage, "spike_button_status", [コールバック], qos_profile)
         create_subscription(SpikePowerStatusMessage, "spike_power_status", [コールバック], qos_profile)
     ```
+<br>
+<br>
 
 ## カスタムメッセージ型の扱い方
 - メッセージ型定義ファイルは[raspike_uros_msg/msg](./raspike_uros_msg/msg)にある
@@ -134,6 +136,9 @@
         self.rev_hub_current = hub_status.current
     ```
 
+<br>
+<br>
+
 ## センサモード
 - カラーセンサセンサと距離センサはモードを切り替えると取得値の種類が変化する
     - カラーセンサ：全4モード
@@ -158,6 +163,9 @@
     |1|距離|ultrasonic_sensor=距離|    
     |2|presemce値|ultrasonic_sensor=presemce値|
 
+<br>
+<br>
+
 ## カラーコード
 - カラーコードの対応表を以下に示す
 
@@ -171,6 +179,9 @@
 |5|WHILE|
 |6|BRACK|
 |-2|err|
+
+<br>
+<br>
 
 ## 参考：ROS2アプリケーションを新規に作成する方法
 1. 下記のコマンドでROS2パッケージを新規作成

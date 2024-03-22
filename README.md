@@ -95,13 +95,18 @@
     - SPIKE側で動作するuROSパッケージのソースコード
     - [bin/asp.dfu](./bin/asp.dfu)のソース
 
+<br>
+<br>
 
 # 使用方法(uROSプログラムに変更が必要無い場合)
+通常の環境構築の方法
+<br>
+
 ## rasberryPi側の環境構築
 ### rasberryPi OS (**64bit**)をインストール
 - [インストラー](https://www.raspberrypi.com/software/)をインストール
-- インストラーからrasberryPi OS(64bit)をインストール
-    - ROSを動かすために64bit版をインストールする
+- インストラーでrasberryPi OS(64bit)のイメージをSDに作成
+    - ROSを動かすために**64bit版**を使用する
     - **2023-12-05リリース版**を使用する事を推奨（動作確認済み）
         - [ここ](https://downloads.raspberrypi.com/raspios_armhf/images/?_gl=1*g4pkln*_ga*MTY4NzY2Mzg1NS4xNzA5MDI4NTI3*_ga_22FD70LWDS*MTcwOTEwMTA1MS4yLjEuMTcwOTEwMTUyNS4wLjAuMA..)の2023-05-03-raspios-bullseye-arm64.img.xzなど
 
