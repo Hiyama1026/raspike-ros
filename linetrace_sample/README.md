@@ -1,5 +1,6 @@
 # ETロボコン走行体用ROSライントレースプログラム
 - このパッケージは`[ROS2用ワークスペース]\src`に置くことで使用できる
+- ToDo:全体的に改善
 
 ## ファイル構成
 - `src\linetrace_sample\setup.py`
@@ -20,7 +21,10 @@
     ```bash
     $ ros2 run linetrace_sample lt_sample_node
     ```
-## 参考1：使用できるメッセージ型・パブリッシャー・サブスクライバー
+
+
+## 参考（[ROS2_GUIDE.md](../ROS2_GUIDE.md)の抜粋）    
+### 参考1：使用できるメッセージ型・パブリッシャー・サブスクライバー
 (※)[rpi_ros2_node.py](../ros2_raspike_rt/ros2_raspike_rt/lib/rpi_ros2_node.py)を参考にすると良い<Br>
 - 使用できるメッセージ型（インポート方法）
 ```
@@ -56,7 +60,7 @@ from raspike_uros_msg.msg import SpikePowerStatusMessage
     create_subscription(SpikePowerStatusMessage, "spike_power_status", [コールバック], qos_profile)
     ```
 
-## 参考2：ROS2アプリケーションを新規に作成する方法
+### 参考2：ROS2アプリケーションを新規に作成する方法
 1. 下記のコマンドでROS2パッケージを新規作成
     ```bash
     $ cd ~/ros2_ws/src
