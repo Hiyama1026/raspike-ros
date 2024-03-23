@@ -15,8 +15,8 @@
         - [spike-rt](https://github.com/spike-rt/spike-rt)と[micro-ROS_ASP3](https://github.com/exshonda/micro-ROS_ASP3)を使用
             - ファームウェアに変更を加えたい場合に限りインストールが必要
 
-- rasberryPi
-    - rasberryPi OS(64bit，**2023-12-05リリース版**)
+- Raspberry Pi
+    - Raspberry Pi OS(64bit，**2023-12-05リリース版**)
     - ROS 2 Humble
 - 動作確認済みのバージョン
     - micro-ROS_ASP3
@@ -26,10 +26,10 @@
 
 - SPIKEとRasberryPiの接続・SPIKEと、センサー、モーターの接続
     - SPIKEとRasberryPiはシリアルで接続する
-        - 接続方法は，後述の**変更点を除いて**rasPike(ETロボコン)環境と同じ．
+        - 接続方法は，後述の**変更点を除いて**RasPike(ETロボコン)環境と同じ．
             - [RasPike GitHub](https://github.com/ETrobocon/RasPike)
             - SPIKEとRasberryPiの接続方法や，SPIKEとセンサー・モーターの接続は，「[Raspberry PiとSPIKEの接続](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)」を参照
-        - rasPikeからの変更点
+        - RasPikeからの変更点
             - SPIKEとセンサー・モーターの接続ポートを一部変更
                 - 超音波センサーの接続ポートとシリアル通信のポートを入れ替えている
                     - 本環境における，SPIKEとデバイスの接続方法
@@ -68,9 +68,9 @@
 
 - raspike_uros_msg
     - ETロボコン走行体用カスタムメッセージのメッセージ型定義用ROS 2パッケージ
-    - SPIKEとrasberryPiの両方で使用
+    - SPIKEとRaspberry Piの両方で使用
         - SPIKE：`micro-ROS_ASP3\external\primehub\firmware\mcu_ws`に置く
-        - rasberryPi：`<ROS 2ワークスペース>\src`に置く
+        - Raspberry Pi：`<ROS 2ワークスペース>\src`に置く
 
 - ros2_raspike_rt(アプリ開発用APIを使用する場合に使用するROS 2パッケージ)
     - `ros2_raspike_rt\ros2_raspike_rt\app_node.py`
@@ -102,10 +102,10 @@
 通常の環境構築の方法
 <br>
 
-## rasberryPi側の環境構築
-### rasberryPi OS (**64bit**)をインストール
+## Raspberry Pi側の環境構築
+### Raspberry Pi OS (**64bit**)をインストール
 - [インストラー](https://www.raspberrypi.com/software/)をインストール
-- インストラーでrasberryPi OS(64bit)のイメージをSDに作成
+- インストラーでRaspberry Pi OS(64bit)のイメージをSDに作成
     - ROSを動かすために**64bit版**を使用する
     - **2023-12-05リリース版**を使用する事を推奨（動作確認済み）
         - [ここ](https://downloads.raspberrypi.com/raspios_armhf/images/?_gl=1*g4pkln*_ga*MTY4NzY2Mzg1NS4xNzA5MDI4NTI3*_ga_22FD70LWDS*MTcwOTEwMTA1MS4yLjEuMTcwOTEwMTUyNS4wLjAuMA..)の2023-05-03-raspios-bullseye-arm64.img.xzなど
@@ -127,7 +127,7 @@
     sudo reboot
     ```
 
-1. シリアル通信のケーブルをrasberryPiに接続する
+1. シリアル通信のケーブルをRaspberry Piに接続する
     - 参考：[RasPike](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)
 
 ### ROS 2のインストール
@@ -286,12 +286,12 @@
     sudo python3 ./pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
     ```
 
-1. SPIKEとrasberryPiをシリアルで接続する
+1. SPIKEとRaspberry Piをシリアルで接続する
     - シリアル通信用のケーブルはSPIKEのポートFに接続する
     - その他の各種センサー・アクチュエーターも[動作環境](#動作環境)で紹介した通りのポートに接続する
 
 ## ROS 2プログラムの実行
-- rasberryPiでagentの実行とは別のターミナルを起動してROS 2プログラムを実行する
+- Raspberry Piでagentの実行とは別のターミナルを起動してROS 2プログラムを実行する
     - ROS 2プログラム実行のコマンドのフォーマットは次の通り
         ```bash
         ros2 run [パッケージ名] [ノード名]
@@ -300,12 +300,12 @@
 1. ros2_raspike_rt/ros2_raspike_rt/app_node.pyに処理を記述
     - `app_timer()`はデフォルトでは10ms周期で呼び出される
     - [APIリファレンス](./ros2_raspike_rt/API_REFERENCE.md)
-1. 一つ目のrasberryPiのターミナルでエージェントを実行する
+1. 一つ目のRaspberry Piのターミナルでエージェントを実行する
 1. SPIKEの電源を入れる
     - 必ず，「エージェントの実行」→「SPIKEの起動」の順番である必要がある
     - Hubのディスプレイに「ET」の文字が表示されたら，エージェントとの接続が完了している
     - ディスプレイに顔が表示される場合はエージェントとの接続が失敗している
-1. 二つ目のrasberryPiのターミナルで下記のコマンドを入力し，アプリを実行する
+1. 二つ目のRaspberry Piのターミナルで下記のコマンドを入力し，アプリを実行する
     ```bash
     cd ~/ros2_ws
     . install/setup.bash
@@ -348,7 +348,7 @@
 # SPIKE側のuROSプログラムを編集したい場合の環境構築方法（オプション）
 - uros_raspike-rtの使用方法
     - uROSプログラム（asp.dfu）を自前でビルドして実行する手順
-## rasberryPi側の環境構築
+## Raspberry Pi側の環境構築
 - [uROSプログラムに変更が必要無い場合](#使用方法urosプログラムに変更が必要無い場合)と同じ
 ## SPIKE側の環境構築
 1. PC上でワークスペースを作成する
@@ -398,7 +398,7 @@
     cd ../spike-rt/uros_raspike_rt
     make deploy-dfu
     ```
-## SPIKEとrasberryPiの接続・ROS 2アプリの実行
+## SPIKEとRaspberry Piの接続・ROS 2アプリの実行
 - 接続方法，ROS 2アプリの実行方法の基本的な流れは[uROSプログラムに変更が必要無い場合](#使用方法urosプログラムに変更が必要無い場合)と同じ
 
 # 使用できるパブリッシャー・サブスクライバー
@@ -406,10 +406,10 @@
     - 注意：QoSを揃える必要がある
 
 # カスタムメッセージ仕様
-- SPIKE(uRPS) → rasberryPi(ROS 2)<BR>
+- SPIKE(uRPS) → Raspberry Pi(ROS 2)<BR>
 ![to_rpi_message](./img/to_rpi_msg_contents.png)
 
-- rasberryPi(ROS 2) → SPIKE(uROS) <BR>
+- Raspberry Pi(ROS 2) → SPIKE(uROS) <BR>
 ![to_spike_message](./img/to_spike_msg_contents.png)
 
 # 設計メモ
@@ -439,5 +439,5 @@
     - EV3-RTのAPIに揃えたい場合はuros.cの`raspike_rt_detectable_color`を`detectable_color_for_EV3`に変更する．
 - ボタンコマンドについて
     - SPIKE(uros.c)は，押されているボタンに応じたコマンドを送信している.
-    - コマンドの値はrasPike環境に揃えている．
+    - コマンドの値はRasPike環境に揃えている．
     
