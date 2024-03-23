@@ -24,11 +24,11 @@
     - spike-rt
         - コミットID：[f6724115b0ef8c8367a760eaec2840089e6b4e55](https://github.com/spike-rt/spike-rt/tree/f6724115b0ef8c8367a760eaec2840089e6b4e55)
 
-- SPIKEとRasberryPiの接続・SPIKEと、センサー、モーターの接続
-    - SPIKEとRasberryPiはシリアルで接続する
+- SPIKEとRaspberryPiの接続・SPIKEと、センサー、モーターの接続
+    - SPIKEとRaspberryPiはシリアルで接続する
         - 接続方法は，後述の**変更点を除いて**RasPike(ETロボコン)環境と同じ．
             - [RasPike GitHub](https://github.com/ETrobocon/RasPike)
-            - SPIKEとRasberryPiの接続方法や，SPIKEとセンサー・モーターの接続は，「[Raspberry PiとSPIKEの接続](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)」を参照
+            - SPIKEとRaspberryPiの接続方法や，SPIKEとセンサー・モーターの接続は，「[Raspberry PiとSPIKEの接続](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)」を参照
         - RasPikeからの変更点
             - SPIKEとセンサー・モーターの接続ポートを一部変更
                 - 超音波センサーの接続ポートとシリアル通信のポートを入れ替えている
@@ -272,10 +272,10 @@
 
 ## SPIKE側の環境構築
 1. SPIKEをDFUモードにする
-    - SPIKEのbluetooth(BT)ボタンを押したままPC(RasberryPiでも可)とSPIKEをUSBケーブルで接続する
+    - SPIKEのbluetooth(BT)ボタンを押したままPC(RaspberryPiでも可)とSPIKEをUSBケーブルで接続する
     - BTボタンが，「ピンク色に点灯」→「虹色に点滅」になるまで押し続ける
 
-1. RasberryPi等のLinux PCからuros_raspike-rt/bin/asp.dfuを書き込む(Linux上で作業)
+1. RaspberryPi等のLinux PCからuros_raspike-rt/bin/asp.dfuを書き込む(Linux上で作業)
     - pyusbをインストール
     ```bash
     sudo pip3 install pyusb
