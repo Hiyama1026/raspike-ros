@@ -88,6 +88,7 @@
                 - uros_raspike-rt(SPIKE)と通信する
 
 - linetrace_sample（ROS 2 APIを直接扱ってアプリを開発した場合のサンプル）
+    - **ToDo：修正**
     - uROS(uros_raspike-rt)と通信して動作するROS 2アプリケーションのサンプルパッケージ
         - ROS 2のタスク内に直接ライントレースの処理を記入したもの
 
