@@ -109,7 +109,7 @@
 - インストラーでRaspberry Pi OS(64bit)のイメージをSDに作成
     - ROSを動かすために**64bit版**を使用する
     - **2023-05-03リリース版**を使用する事を推奨（動作確認済み）
-        - [ここ](https://downloads.raspberrypi.com/raspios_armhf/images/?_gl=1*g4pkln*_ga*MTY4NzY2Mzg1NS4xNzA5MDI4NTI3*_ga_22FD70LWDS*MTcwOTEwMTA1MS4yLjEuMTcwOTEwMTUyNS4wLjAuMA..)の2023-05-03-raspios-bullseye-arm64.img.xzなど
+        - [ここ](https://downloads.raspberrypi.com/raspios_arm64/images/?_gl=1*jkvy7z*_ga*MTk3MzQ4Nzc0Ny4xNzEyMjk0Njcx*_ga_22FD70LWDS*MTcxMjgyMDI0My4zLjEuMTcxMjgyMjM3OC4wLjAuMA..)の2023-05-03-raspios-bullseye-arm64.img.xzなど
 
 
 ### GPIOの接続を有効にする
@@ -201,7 +201,7 @@
         ```
 
 ### エージェントのビルドと実行（方法1，2のどちらでも可）
-#### エージェントのビルドと実行:方法1
+#### エージェントのビルドと実行:方法1（動作確認済み）
 1. 参考
 
 - 下記の記事を参考にで`Micro-XRCE-DDS-Agent`をビルドする<BR>
