@@ -228,8 +228,7 @@
         - [CMake公式](https://cmake.org/download/)の[Older Releases](https://cmake.org/files/)からcmake-3.27.2-linux-aarch64.tar.gzをダウンロード
         - 下記コマンドで更新([参考サイト](https://qiita.com/koki2022/items/481c1b03445567263a97))
             - ``$ tar -zxvf cmake-3.27.2-linux-aarch64.tar.gz``
-            - ``$ cd cmake-3.27.2-linux-aarch64/``
-            - ``$ cd cmake-3.27.2-linux-aarch64/``
+            - ``$ sudo mv cmake-3.27.2-linux-aarch64/ /opt``
             - ``$ sudo ln -s /opt/cmake-3.27.2-linux-aarch64/bin/* /usr/bin``
         - .bashrcに以下を追加してロード ($ source ~/.bashrc)
             ```
