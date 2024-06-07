@@ -246,7 +246,7 @@
             ```
         - <補足>
             - ``$ sudo apt remove cmake``等をするとROSが壊れる
-            - 壊れた場合は``$ sudo apt install -y ./ros-humble-desktop-0.3.1_arm64.deb``を再度実行
+            - 壊れた場合は``$ sudo apt install -y ./ros-humble-desktop-0.3.1_arm64.deb``を再度実行（RaspberryPi OSの場合）
 
 1. 実行
 
