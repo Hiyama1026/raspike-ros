@@ -20,9 +20,9 @@
     - ROS 2 Humble
 - 動作確認済みのバージョン
     - micro-ROS_ASP3
-        - コミットID：[3a306729a797d0f4976daab50c5698acffe38a12](https://github.com/exshonda/micro-ROS_ASP3/tree/3a306729a797d0f4976daab50c5698acffe38a12)
+        - コミットID：[dfe4cc40bade9aace0b047611e1c0ed6da1a5dc2](https://github.com/exshonda/micro-ROS_ASP3/tree/dfe4cc40bade9aace0b047611e1c0ed6da1a5dc2)
     - spike-rt
-        - コミットID：[f6724115b0ef8c8367a760eaec2840089e6b4e55](https://github.com/spike-rt/spike-rt/tree/f6724115b0ef8c8367a760eaec2840089e6b4e55)
+        - バージョン：[v0.2.0](https://github.com/spike-rt/spike-rt/tree/v0.2.0)
 
 - SPIKEとRaspberryPiの接続・SPIKEと、センサー、モーターの接続
     - SPIKEとRaspberryPiはシリアルで接続する
@@ -370,7 +370,7 @@
     - [動作確認済のバージョン](#動作環境)
     ```bash
     git clone https://github.com/exshonda/micro-ROS_ASP3.git
-    git clone https://github.com/spike-rt/spike-rt.git
+    git clone -b v0.2.0 https://github.com/spike-rt/spike-rt.git
     ```
 
 1. spike-rtとmicro-ROS_ASP3をセットアップ
