@@ -1,17 +1,29 @@
 # ROS通信によるETロボコン走行体の制御アプリケーション開発用プラットフォーム（RasPike-ROS）
-本ソフトウェアはROS 2によりETロボコン用走行体(もしくはそれと構成が同じロボット)を制御するためのソフトウェアプラットホームである．
-<br>
-本ソフトウェアを持ちることよりROS 2のプログラムによりETロボコン用走行体を制御することが可能である．
+# 目次
+- [概要](#概要)
+- [動作確認済み環境](#動作確認済み環境)
+- [システムの構成](#システムの構成)
+- [環境構築方法（通常）](#環境構築方法通常の方法urosプログラムに変更が必要無い場合)
+- [環境構築方法（uROSプログラムを変更したい場合）](#spike側のurosプログラムを編集したい場合の環境構築方法オプション)
+- [使用できるパブリッシャ・サブスクライバ](#使用できるパブリッシャーサブスクライバー)
+- [カスタムメッセージ型の仕様](#カスタムメッセージ型の仕様)
+- [ファイル構成](#ファイル構成)
+- [設計メモ](#設計メモ)
+- [免責](#免責)
+- [付録](#付録)
 
-<br>
-<br>
+
+# 概要
+- 本ソフトウェアはROS 2によりETロボコン用走行体(もしくはそれと構成が同じロボット)を制御するためのソフトウェアプラットホームである
+- 本ソフトウェアを使用することよりROS 2のプログラムによりETロボコン用走行体を制御することが可能である
+- アプリ開発用APIを使用すれば，ROS 2の知識を有していなくてもアプリ開発が可能である
+
 
 # 動作確認済み環境
 
 - SPIKE
    - micro-ROS(uROS)ファームウェア[uros_raspike-rt](./uros_raspike_rt)
         - SPIKE上で動作し，各種センサー値をpublishし，モータ制御値をsubscribeする
-        - プリビルドバイナリを用意([asp.dfu](./bin/asp.dfu))
         - [spike-rt](https://github.com/spike-rt/spike-rt)と[micro-ROS_ASP3](https://github.com/exshonda/micro-ROS_ASP3)を使用
             - ファームウェアに変更を加えたい場合に限りインストールが必要
 
@@ -24,31 +36,11 @@
     - spike-rt
         - バージョン：[v0.2.0](https://github.com/spike-rt/spike-rt/tree/v0.2.0)
 
-- SPIKEとRaspberryPiの接続・SPIKEと、センサー、モーターの接続
-    - SPIKEとRaspberryPiはシリアルで接続する
-        - 接続方法は，後述の**変更点を除いて**RasPike(ETロボコン)環境と同じ．
-            - [RasPike GitHub](https://github.com/ETrobocon/RasPike)
-            - SPIKEとRaspberryPiの接続方法や，SPIKEとセンサー・モーターの接続は，「[Raspberry PiとSPIKEの接続](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)」を参照
-        - RasPikeからの変更点
-            - SPIKEとセンサー・モーターの接続ポートを一部変更
-                - 超音波センサーの接続ポートとシリアル通信のポートを入れ替えている
-                    - 本環境における，SPIKEとデバイスの接続方法
 
-                    |接続デバイス|ポート|
-                    |---|---|
-                    |アームモータ|A|
-                    |右モータ|B|
-                    |左モータ|E|
-                    |カラーセンサー|C|
-                    |serial通信|**F**|
-                    |超音波センサー|**D**|
-            - **上記の表の構成に沿ったものであれば**筐体はどのような形状であっても構わない
-            - (補足) [micro-ROSファームウェア自動生成ツール](https://github.com/Hiyama1026/uros_spike-rt_gen)を使用して構成を変更する事も可能
-
-# アプリケーション構成
+# システムの構成
 - 2種類の方法でアプリを開発可能である．両者を同時に使用した場合の動作は保証しない
     - ROS 2 APIを直接扱い．ROS2プログラミングによりアプリケーションを開発する方法
-        - [ETロボコン走行体向けカスタムメッセージ型](#カスタムメッセージ仕様)を直接扱う
+        - [ETロボコン走行体向けカスタムメッセージ型](#カスタムメッセージ型の仕様)を直接扱う
         - ガイドを[ROS2_GUIDE.md](./ROS2_GUIDE.md)に記載
         - サンプルプログラム : [linetrace_sample](./linetrace_sample/)
     - アプリケーション開発用APIを使用
@@ -57,54 +49,24 @@
             - 時間コールバック関数である`app_timer()`内にプログラムを記述する．
         - サンプルプログラム : [app_node.py](./ros2_raspike_rt/ros2_raspike_rt/app_node.py)
 
-
-# ファイル構成
-- bin
-    - asp.dfu
-        - micro-ROS(uROS)ファームウェアのプリビルドバイナリ
-        - SPIKEに書き込んで使用する
-    - pydfu.py
-        - SPIKEへの書き込みプログラム
-
-- raspike_uros_msg
-    - ETロボコン走行体用カスタムメッセージのメッセージ型定義用ROS 2パッケージ
-    - SPIKEとRaspberry Piの両方で使用
-        - SPIKE：`micro-ROS_ASP3\external\primehub\firmware\mcu_ws`に置く
-        - Raspberry Pi：`<ROS 2ワークスペース>\src`に置く
-
-- ros2_raspike_rt(アプリ開発用APIを使用する場合に使用するROS 2パッケージ)
-    - `ros2_raspike_rt\ros2_raspike_rt\app_node.py`
-        - アプリ開発用のファイル
-            - **ユーザはこのファイルにアプリを記述する**
-            - Pythonによるアプリ開発が可能
-            - appNodeクラス内の`app_timer()`に処理を記述する
-                - 周期的に呼ばれる
-        - APIは[APIリファレンス](./ros2_raspike_rt/API_REFERENCE.md)を参照
-    - `ros2_raspike_rt\ros2_raspike_rt\lib`フォルダ内のファイル
-        - ROS 2処理に関するのライブラリファイル等    
-        - `rpi_ros2_node.py`
-            - uROSからのセンサ値の受信・app_node.pyで計算された指令値の送信を行うROS 2プログラム
-                - app_node.pyからAPIを介して指令値が渡される
-                - uros_raspike-rt(SPIKE)と通信する
-
-- linetrace_sample（ROS 2 APIを直接扱ってアプリを開発した場合のサンプル）
-    - **ToDo：修正**
-    - uROS(uros_raspike-rt)と通信して動作するROS 2アプリケーションのサンプルパッケージ
-        - ROS 2のタスク内に直接ライントレースの処理を記入したもの
-
-- uros_raspike-rt
-    - SPIKE側で動作するuROSパッケージのソースコード
-    - [bin/asp.dfu](./bin/asp.dfu)のソース
-
 <br>
 <br>
 
-# 使用方法(uROSプログラムに変更が必要無い場合)
+# 環境構築方法　<br>(通常の方法，uROSプログラムに変更が必要無い場合)
 - こちらが通常の環境構築の方法
     - 後述の「[SPIKE側のuROSプログラムを編集したい場合の環境構築方法](#spike側のurosプログラムを編集したい場合の環境構築方法オプション)」はオプショナル
 
 ## 1. Raspberry Pi用OSのインストールとROS 2のインストール
-### A：Raspberry Pi OSを使用する場合
+
+### A：Ubuntu22.04LTSを使用する場合
+1. Ubuntu22.04のイメージファイルを入手し，[RaspberryPI OS Imager](https://www.raspberrypi.com/software/)等を使用してSDカードに焼く
+    - イメージ入手先例：下記サイトのPreinstalled desktop image
+        - https://ftp.jaist.ac.jp/pub/Linux/ubuntu-cdimage/ubuntu/releases/22.04/release/
+        - ダウンロード後，xzファイルを解凍して使用
+
+1. - [ROS 2公式サイト](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)，もしくは下記付録の「[Ubuntu PCにROS 2 Humbleをインストールする方法](#ubuntu-pcにros-2-humbleをインストールする方法)」に従い，ROS 2 Humbleをインストール
+
+### B：Raspberry Pi OSを使用する場合
 1. Raspberry Pi OS (**64bit**)をインストール
     - [インストラー](https://www.raspberrypi.com/software/)をインストール
     - インストラーでRaspberry Pi OS(64bit)のイメージをSDに作成
@@ -181,7 +143,7 @@
         ```
 
     - ROS 2パッケージをワークスペースに置く
-        - `ros2_ws\src`に以下のファイルを置く
+        - `ros2_ws/src`に以下のファイルを置く
             - raspike_uros_msg
             - ros2_raspike_rt (ROS2 APIを直接扱って開発を行う場合は不要)
             - linetrace_sample (サンプルプログラムのためどちらでも良い)
@@ -201,13 +163,7 @@
         colcon build
         ```
 
-### B：Ubuntu22.04LTSを使用する場合
-1. Ubuntu22.04のイメージファイルを入手し，[RaspberryPI OS Imager](https://www.raspberrypi.com/software/)等を使用してSDカードに焼く
-    - イメージ入手先例：下記サイトのPreinstalled desktop image
-        - https://ftp.jaist.ac.jp/pub/Linux/ubuntu-cdimage/ubuntu/releases/22.04/release/
-        - ダウンロード後，xzファイルを解凍して使用
 
-1. - [ROS 2公式サイト](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)，もしくは下記付録の「[Ubuntu PCにROS 2 Humbleをインストールする方法](#ubuntu-pcにros-2-humbleをインストールする方法)」に従い，ROS 2 Humbleをインストール
 
 ## 2. Raspberry Pi上でエージェントをビルド・実行（方法1，2のどちらでも可）
 - 以下はRaspberr Pi OSとUbuntu22.04で共通の手順
@@ -236,9 +192,9 @@
     - **CMakeのバージョンが古いと言われた場合は新しくする**
         - [CMake公式](https://cmake.org/download/)の[Older Releases](https://cmake.org/files/)からcmake-3.27.2-linux-aarch64.tar.gzをダウンロード
         - 下記コマンドで更新([参考サイト](https://qiita.com/koki2022/items/481c1b03445567263a97))
-            - ``$ tar -zxvf cmake-3.27.2-linux-aarch64.tar.gz``
-            - ``$ sudo mv cmake-3.27.2-linux-aarch64/ /opt``
-            - ``$ sudo ln -s /opt/cmake-3.27.2-linux-aarch64/bin/* /usr/bin``
+            - ``tar -zxvf cmake-3.27.2-linux-aarch64.tar.gz``
+            - ``sudo mv cmake-3.27.2-linux-aarch64/ /opt``
+            - ``sudo ln -s /opt/cmake-3.27.2-linux-aarch64/bin/* /usr/bin``
         - .bashrcに以下を追加してロード ($ source ~/.bashrc)
             ```
             export PATH=/opt/cmake-3.27.2-linux-aarch64/bin:$PATH
@@ -280,54 +236,65 @@
     ```    
 
 ## 3. SPIKE側の環境構築
-1. SPIKEをDFUモードにする
-    - SPIKEのbluetooth(BT)ボタンを押したままPC(RaspberryPiでも可)とSPIKEをUSBケーブルで接続する
-    - BTボタンが，「ピンク色に点灯」→「虹色に点滅」になるまで押し続ける
-
-1. RaspberryPi等のLinux PCからuros_raspike-rt/bin/asp.dfuを書き込む(Linux上で作業)
-    - pyusbをインストール
-    ```bash
-    sudo pip3 install pyusb
-    ```
-    - ファームウエアの書き込み
-    ```bash
-    cd uros_raspike-rt/bin
-    sudo python3 ./pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
-    ```
+1. SPIKE向けファームウェアを書き込む
+    - [uros_raspike-rt/bin](./bin/)のREADME.mdに従う
 
 1. SPIKEとRaspberry Piをシリアルで接続する
     - シリアル通信用のケーブルはSPIKEのポートFに接続する
-    - その他の各種センサー・アクチュエーターも[動作環境](#動作環境)で紹介した通りのポートに接続する
+    - 下記の表に従ってデバイスを接続する
+        - RasPikeの超音波センサーの接続ポートとシリアル通信のポートを入れ替えている
 
-## 4. ROS 2プログラムの実行
+            |接続デバイス|ポート|
+            |---|---|
+            |アームモータ|A|
+            |右モータ|B|
+            |左モータ|E|
+            |カラーセンサー|C|
+            |serial通信|**F**|
+            |超音波センサー|**D**|
+
+1. (補足) [micro-ROSファームウェア自動生成ツール](https://github.com/Hiyama1026/uros_spike-rt_gen)を使用して接続デバイスを変更する事も可能
+
+## 4. ROS 2プログラムの開発と実行
+<!--
 - Raspberry Piでagentの実行とは別のターミナルを起動してROS 2プログラムを実行する
     - ROS 2プログラム実行のコマンドのフォーマットは次の通り
         ```bash
         ros2 run [パッケージ名] [ノード名]
         ```
-### ros2_raspike_rtでアプリを開発・実行する場合（アプリ開発用APIを使用して開発を行う場合）
+-->
+
+### A. アプリ開発用APIを使用して開発を行う方法
+1. パッケージをROS 2用ワークスペースにコピー(実施済みの場合はスキップ)
+    ```bash
+    cp -r ~/uros_raspike-rt/ros2_raspike_rt ~/ros2_ws
+    cp -r ~/uros_raspike-rt/raspike_uros_msg ~/ros2_ws
+    ```
 1. ros2_raspike_rt/ros2_raspike_rt/app_node.pyに処理を記述
     - `app_timer()`はデフォルトでは10ms周期で呼び出される
     - [APIリファレンス](./ros2_raspike_rt/API_REFERENCE.md)
-1. 一つ目のRaspberry Piのターミナルでエージェントを実行する
+1. Raspberry Piのターミナルでエージェントを実行する
+    ```bash
+    ros2 run micro_ros_agent micro_ros_agent serial --dev [device]
+    ```
 1. SPIKEの電源を入れる
     - 必ず，「エージェントの実行」→「SPIKEの起動」の順番である必要がある
     - Hubのディスプレイに「ET」の文字が表示されたら，エージェントとの接続が完了している
-    - ディスプレイに顔が表示される場合はエージェントとの接続が失敗している
-1. 二つ目のRaspberry Piのターミナルで下記のコマンドを入力し，アプリを実行する
+1. ROS 2アプリを開発しているPCのターミナルで下記のコマンドを入力し，アプリを実行する
+    - Raspberry Piの場合は，エージェント用とは別にターミナルを立ち上げる
     ```bash
     cd ~/ros2_ws
     . install/setup.bash
-    ros2 run ros2_raspike_rt app_node
+    ros2 run ros2_raspike_rt app_node   # ROS 2アプリの実行
     ```
-    - ROS 2のプログラムを変更したら，その度に下記のコマンドを実行する必要がある
-        ```bash
-        cd ~/ros2_ws
-        colcon build
-        . install/setup.bash
-        ```
+1. ROS 2のプログラムを変更したら，その度に下記のコマンドを実行する必要がある
+    ```bash
+    cd ~/ros2_ws
+    colcon build
+    . install/setup.bash
+    ```
 
-### ROS 2プログラミングによりアプリケーションを開発する方法
+### B. ROS 2プログラミングによりアプリケーションを開発する方法
 一般的なROS 2のアプリ開発の方法で開発を行う<Br>
 1. ROS 2ワークスペースのsrcディレクトリ内にROS 2パッケージを作成する
     ```
@@ -339,6 +306,8 @@
     ```
 1. ROS 2アプリを開発する
     - ROS2プログラミングのガイド[ROS2_GUIDE.md](./ROS2_GUIDE.md)に従いアプリを開発する
+    - 参考：サンプルプログラム
+        - [linetrace_sample](./linetrace_sample/)
     - (注)Pythonパッケージによる開発のみ動作確認済み
 1. 開発したROS 2パッケージをビルドする
      ```bash
@@ -349,8 +318,8 @@
 1. Raspberry Pi上でuROSエージェントを実行し，SPIKEの電源を入れる
 1. アプリを実行する
     ```
-    $ cd ~/ros2_ws
-    $ ros2 run [pkg_name] [node_name]
+    cd ~/ros2_ws
+    ros2 run [pkg_name] [node_name]
     ```
 
 
@@ -359,7 +328,7 @@
     - uROSプログラム（asp.dfu）を自前でビルドして実行する手順
 ## Raspberry Pi側の環境構築
 - [uROSプログラムに変更が必要無い場合](#使用方法urosプログラムに変更が必要無い場合)と同じ
-## SPIKE側の環境構築
+## 1. SPIKE側の環境構築
 1. PC上でワークスペースを作成する
     ```bash
     mkdir ~/asp_uros_ws
@@ -380,8 +349,8 @@
         - [spike-rt](https://github.com/spike-rt/spike-rt)
 
 1. micro-ROS_ASP3にカスタムメッセージ定義パッケージを追加
-    - `micro-ROS_ASP3\external\primehub\firmware\mcu_ws`にraspike_uros_msgを置く
-    - `micro-ROS_ASP3\micro_ros_asp\micro_ros_asp.mk`に下記を追加
+    - `micro-ROS_ASP3/external/primehub/firmware/mcu_ws`にraspike_uros_msgを置く
+    - `micro-ROS_ASP3/micro_ros_asp/micro_ros_asp.mk`に下記を追加
     ```
     INCLUDES += -I$(MIROROS_ASP3_TOP_DIR)/$(MICROROS_INC)/raspike_uros_msg
     ```
@@ -392,7 +361,7 @@
     ```
 
 1. uROSパッケージを追加・SPIKEへの書き込み
-    - `micro-ROS_ASP3\spike-rt`にuros_raspike-rtを置く
+    - `micro-ROS_ASP3/spike-rt`にuros_raspike-rtを置く
     - 下記のどちらかのコマンドでビルド・書き込み
         - (※)並列ビルドでエラーになる時がある．
             - その時は2回`make asp.bin`でビルドする事ができる
@@ -407,19 +376,68 @@
     cd ../spike-rt/uros_raspike_rt
     make deploy-dfu
     ```
-## SPIKEとRaspberry Piの接続・ROS 2アプリの実行
+## 2. SPIKEとRaspberry Piの接続・ROS 2アプリの実行
 - 接続方法，ROS 2アプリの実行方法の基本的な流れは[uROSプログラムに変更が必要無い場合](#使用方法urosプログラムに変更が必要無い場合)と同じ
 
-# 使用できるパブリッシャー・サブスクライバー
-- [linetrace_sample\README.md](./linetrace_sample/README.md/#参考1使用できるメッセージ型・パブリッシャー・サブスクライバー)を参照
-    - 注意：QoSを揃える必要がある
+<br>
+<br>
 
-# カスタムメッセージ仕様
+# 使用できるパブリッシャー・サブスクライバー
+- [linetrace_sample/README.md](./linetrace_sample/README.md/#参考1使用できるメッセージ型・パブリッシャー・サブスクライバー)を参照
+    - 注意：QoSを揃える必要がある
+<br>
+<br>
+
+# カスタムメッセージ型の仕様
 - SPIKE(uRPS) → Raspberry Pi(ROS 2)<BR>
 ![to_rpi_message](./img/to_rpi_msg_contents.png)
 
 - Raspberry Pi(ROS 2) → SPIKE(uROS) <BR>
 ![to_spike_message](./img/to_spike_msg_contents.png)
+
+<br>
+<br>
+
+# ファイル構成
+- bin
+    - asp.dfu
+        - micro-ROS(uROS)ファームウェアのプリビルドバイナリ
+        - SPIKEに書き込んで使用する
+    - pydfu.py
+        - SPIKEへの書き込みプログラム
+
+- raspike_uros_msg
+    - ETロボコン走行体用カスタムメッセージのメッセージ型定義用ROS 2パッケージ
+    - SPIKEとRaspberry Piの両方で使用
+        - SPIKE：`micro-ROS_ASP3/external/primehub/firmware/mcu_ws`に置く
+        - Raspberry Pi：`<ROS 2ワークスペース>/src`に置く
+
+- ros2_raspike_rt(アプリ開発用APIを使用する場合に使用するROS 2パッケージ)
+    - `ros2_raspike_rt/ros2_raspike_rt/app_node.py`
+        - アプリ開発用のファイル
+            - **ユーザはこのファイルにアプリを記述する**
+            - Pythonによるアプリ開発が可能
+            - appNodeクラス内の`app_timer()`に処理を記述する
+                - 周期的に呼ばれる
+        - APIは[APIリファレンス](./ros2_raspike_rt/API_REFERENCE.md)を参照
+    - `ros2_raspike_rt/ros2_raspike_rt/lib`フォルダ内のファイル
+        - ROS 2処理に関するのライブラリファイル等    
+        - `rpi_ros2_node.py`
+            - uROSからのセンサ値の受信・app_node.pyで計算された指令値の送信を行うROS 2プログラム
+                - app_node.pyからAPIを介して指令値が渡される
+                - uros_raspike-rt(SPIKE)と通信する
+
+- linetrace_sample（ROS 2 APIを直接扱ってアプリを開発した場合のサンプル）
+    - **ToDo：修正**
+    - uROS(uros_raspike-rt)と通信して動作するROS 2アプリケーションのサンプルパッケージ
+        - ROS 2のタスク内に直接ライントレースの処理を記入したもの
+
+- uros_raspike-rt
+    - SPIKE側で動作するuROSパッケージのソースコード
+    - [bin/asp.dfu](./bin/asp.dfu)のソース
+
+<br>
+<br>
 
 # 設計メモ
 - uROS(SPIKE)側のQoSについて
@@ -450,8 +468,14 @@
     - SPIKE(uros.c)は，押されているボタンに応じたコマンドを送信している.
     - コマンドの値はRasPike環境に揃えている．
 
+<br>
+<br>
+
 # 免責
 - 本ソフトウェアの利用により直接的または間接的に生じたいかなる損害に関しても，その責任を負わない．
+
+<br>
+<br>
 
 # 付録
 ## Ubuntu PCにROS 2 Humbleをインストールする方法
