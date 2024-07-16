@@ -3,18 +3,18 @@
 if [ "$#" -ne 1 ]; then
     echo "Error: Exactly one argument is required." >&2
     echo ""
-    echo "- For WSL2 ->'win'"
-    echo "- For Linux(not WSL) -> 'lin'"
-    echo "- Clean state -> 'clean'"
+    echo "- For WSL2 ->\"win\""
+    echo "- For Linux(not WSL) -> \"lin\""
+    echo "- Clean state -> \"clean\""
     exit 1
 fi
 
 if [ ! "$1" == "lin" ] && [ ! "$1" == "win" ] && [ ! "$1" == "clean" ]; then
-    echo "Error: Argument must be 'lin' or 'win'."
+    echo "Error: Argument must be \"lin\" or \"win\" or \"clean\"."
     echo ""
-    echo "- For WSL2 ->'win'"
-    echo "- For Linux(not WSL) -> 'lin'"
-    echo "- Clean state -> 'clean'"
+    echo "- For WSL2 ->\"win\""
+    echo "- For Linux(not WSL) -> \"lin\""
+    echo "- Clean state -> \"clean\""
     exit 1
 fi
 
