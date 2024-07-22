@@ -66,6 +66,25 @@
 
 1. - [ROS 2公式サイト](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)，もしくは下記付録の「[Ubuntu PCにROS 2 Humbleをインストールする方法](#ubuntu-pcにros-2-humbleをインストールする方法)」に従い，ROS 2 Humbleをインストール
 
+1. GPIOの接続を有効にする
+    - これは下記ETロボコンの環境構築方法と同様に32番，33番ピンを使用する方法である
+        - https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike
+    - 下記のコマンドで設定ファイルを開く
+        ```bash
+        sudo nano /boot/config.txt
+        ```
+
+    - config.txtの最後に下記を追加
+        ```bash
+        enable_uart=6
+        dtoverlay=uart5
+        ```
+        
+    - リブートする
+        ```bash
+        sudo reboot
+        ```
+
 ### B：Raspberry Pi OSを使用する場合
 1. Raspberry Pi OS (**64bit**)をインストール
     - [インストラー](https://www.raspberrypi.com/software/)をインストール
@@ -76,6 +95,8 @@
 
 
 1. GPIOの接続を有効にする
+    - これは下記ETロボコンの環境構築方法と同様に32番，33番ピンを使用する方法である
+        - https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike
     - 下記のコマンドで設定ファイルを開く
         ```bash
         sudo nano /boot/config.txt
@@ -83,6 +104,7 @@
 
     - config.txtの最後に下記を追加
         ```bash
+        enable_uart=6
         dtoverlay=uart5
         ```
         
