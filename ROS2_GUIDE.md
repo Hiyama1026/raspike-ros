@@ -210,6 +210,7 @@
 ## スピーカの使い方
 - 駆動時間は10ms単位で指定（``duration``）
 - トーンは10段階で指定する
+- 使用例 : [go_straight_pubsub.cpp](./sample/go_straight_cpp/src/go_straight_pubsub.cpp/#L60-L61)
 
 |set value|tone|
 |---|---|
