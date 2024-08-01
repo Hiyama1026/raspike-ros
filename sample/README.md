@@ -2,7 +2,8 @@
 
 ## 概要
 - ROS 2のサンプルプログラム
-- 走行体側のHubには[uros_raspike_rt](../uros_raspike_rt/)が書き込まれている事が前提
+- 走行体側のHubにはmicro-ROSファームウェアが書き込まれている事が前提
+    - micro-ROSファームウェアの書き込みは[raspike-ros/bin](../bin/)のREADMEを参照
 
 ## 使用方法
 - 各サンプルプログラム（パッケージ）をROS 2ワークスペース内のsrcにコピー

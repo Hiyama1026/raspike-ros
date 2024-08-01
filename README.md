@@ -260,7 +260,7 @@
 
 ## 3. SPIKE側の環境構築
 1. SPIKE向けファームウェアを書き込む
-    - [uros_raspike-rt/bin](./bin/)のREADME.mdに従う
+    - [raspike-ros/bin](./bin/)のREADME.mdに従う
 
 1. SPIKEとRaspberry Piをシリアルで接続する
     - シリアル通信用のケーブルはSPIKEのポートFに接続する
@@ -290,8 +290,8 @@
 ### A. アプリ開発用APIを使用して開発を行う方法
 1. パッケージをROS 2用ワークスペースにコピー(実施済みの場合はスキップ)
     ```bash
-    cp -r ~/uros_raspike-rt/ros2_raspike_rt ~/ros2_ws
-    cp -r ~/uros_raspike-rt/raspike_uros_msg ~/ros2_ws
+    cp -r ~/raspike-ros/ros2_raspike_rt ~/ros2_ws
+    cp -r ~/raspike-ros/raspike_uros_msg ~/ros2_ws
     ```
 1. ros2_raspike_rt/ros2_raspike_rt/app_node.pyに処理を記述
     - `app_timer()`はデフォルトでは10ms周期で呼び出される
