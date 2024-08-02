@@ -248,8 +248,10 @@ void get_ultrasonic_sensor_value(int8_t ultrasonic_mode){
 	switch (ultrasonic_mode){
             case 1:
                 send_ultrasonic_value = pup_ultrasonic_sensor_distance(ult);
-                send_ultrasonic_value = send_ultrasonic_value/10;
-                if(send_ultrasonic_value < 0)   send_ultrasonic_value = -1;
+                if(send_ultrasonic_value < 0)
+                    send_ultrasonic_value = -1;
+                else
+                    send_ultrasonic_value = send_ultrasonic_value/10;
                 send_ultrasonic_mode_id = 1;
                 break;
             case 2:
