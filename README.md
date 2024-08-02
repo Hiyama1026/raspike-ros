@@ -51,9 +51,6 @@
         - 時間コールバック関数である`app_timer()`内にプログラムを記述する．
     - サンプルプログラム : [app_node.py](./ros2_raspike_rt/ros2_raspike_rt/app_node.py)
 
-<br>
-<br>
-
 # 環境構築方法
 - [RasPike-ROS環境構築Wiki](https://github.com/Hiyama1026/raspike-ros/wiki)に従い，環境構築を行う
 
@@ -61,8 +58,6 @@
 # 使用できるパブリッシャー・サブスクライバー
 - [linetrace_sample/README.md](./sample/README.md/#参考1使用できるメッセージ型・パブリッシャー・サブスクライバー)を参照
     - 注意：QoSを揃える必要がある
-<br>
-<br>
 
 # カスタムメッセージ型(raspike_uros_msg)の仕様
 - SPIKE(uRPS) → Raspberry Pi(ROS 2)<BR>
@@ -70,9 +65,6 @@
 
 - Raspberry Pi(ROS 2) → SPIKE(uROS) <BR>
 ![to_spike_message](./img/to_spike_msg_contents.png)
-
-<br>
-<br>
 
 # ファイル構成
 - bin
@@ -110,14 +102,10 @@
     - SPIKE側で動作するuROSパッケージのソースコード
     - [bin/asp.dfu](./bin/asp.dfu)のソース
 
-<br>
-<br>
 
 # 免責
 - 本ソフトウェアの利用により直接的または間接的に生じたいかなる損害に関しても，その責任を負わない．
 
-<br>
-<br>
 
 # 付録：設計メモ
 - uROS(SPIKE)側のQoSについて
