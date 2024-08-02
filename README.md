@@ -3,14 +3,12 @@
 - [概要](#概要)
 - [動作確認済み環境](#動作確認済み環境)
 - [システムの構成](#システムの構成)
-- [環境構築方法（通常）](#環境構築方法通常の方法urosプログラムに変更が必要無い場合)
-- [環境構築方法（uROSプログラムを変更したい場合）](#spike側のurosプログラムを編集したい場合の環境構築方法オプション)
-- [使用できるパブリッシャ・サブスクライバ](#使用できるパブリッシャーサブスクライバー)
-- [カスタムメッセージ型の仕様](#カスタムメッセージ型の仕様)
+- [環境構築方法](#環境構築方法)
+- [使用できるパブリッシャー・サブスクライバー](#使用できるパブリッシャーサブスクライバー)
+- [カスタムメッセージ型の仕様](#カスタムメッセージ型raspike_uros_msgの仕様)
 - [ファイル構成](#ファイル構成)
-- [設計メモ](#設計メモ)
 - [免責](#免責)
-- [付録](#付録)
+- [付録](#付録設計メモ)
 
 
 # 概要
@@ -32,378 +30,33 @@
     - Raspberry Pi OS(64bit，**2023-05-03リリース版**)またはUbuntu22.04LTS
     - ROS 2 Humble
 - 動作確認済みのバージョン
-    - micro-ROS_ASP3
-        - コミットID：[dfe4cc40bade9aace0b047611e1c0ed6da1a5dc2](https://github.com/exshonda/micro-ROS_ASP3/tree/dfe4cc40bade9aace0b047611e1c0ed6da1a5dc2)
     - spike-rt
         - バージョン：[v0.2.0](https://github.com/spike-rt/spike-rt/tree/v0.2.0)
+    - micro-ROS_ASP3（通常は使用しない）
+        - コミットID：[dfe4cc40bade9aace0b047611e1c0ed6da1a5dc2](https://github.com/exshonda/micro-ROS_ASP3/tree/dfe4cc40bade9aace0b047611e1c0ed6da1a5dc2)
 
 
 # システムの構成
-- 2種類の方法でアプリを開発可能である．両者を同時に使用した場合の動作は保証しない
-    - ROS 2 APIを直接扱い．ROS2プログラミングによりアプリケーションを開発する方法
-        - [ETロボコン走行体向けカスタムメッセージ型](#カスタムメッセージ型の仕様)を直接扱う
-        - ガイドを[ROS2_GUIDE.md](./ROS2_GUIDE.md)に記載
-        - サンプルプログラム : [linetrace_sample](./sample/linetrace_sample/)
-    - アプリケーション開発用APIを使用
-        - 走行体制御アプリケーションの開発向けにカスタムメッセージをラップした専用APIを使用する方法．
-        - [専用API仕様](./ros2_raspike_rt/API_REFERENCE.md)
-            - 時間コールバック関数である`app_timer()`内にプログラムを記述する．
-        - サンプルプログラム : [app_node.py](./ros2_raspike_rt/ros2_raspike_rt/app_node.py)
+- 2種類の方法でアプリを開発可能である．(両者を同時に使用した場合の動作は保証しない)
+
+<Br>
+
+1. **ROS 2 APIを直接扱い．ROS2プログラミングによりアプリケーションを開発する方法**
+    - [ETロボコン走行体向けカスタムメッセージ型](#カスタムメッセージ型の仕様)を直接扱う
+    - ガイドを[ROS2_GUIDE.md](./ROS2_GUIDE.md)に記載
+    - サンプルプログラム : [linetrace_sample](./sample/linetrace_sample/)
+1. **アプリケーション開発用APIを使用**
+    - 走行体制御アプリケーションの開発向けにカスタムメッセージをラップした専用APIを使用する方法．
+    - [専用API仕様](./ros2_raspike_rt/API_REFERENCE.md)
+        - 時間コールバック関数である`app_timer()`内にプログラムを記述する．
+    - サンプルプログラム : [app_node.py](./ros2_raspike_rt/ros2_raspike_rt/app_node.py)
 
 <br>
 <br>
 
-# 環境構築方法　<br>(通常の方法，uROSプログラムに変更が必要無い場合)
-- こちらが通常の環境構築の方法
-    - 後述の「[SPIKE側のuROSプログラムを編集したい場合の環境構築方法](#spike側のurosプログラムを編集したい場合の環境構築方法オプション)」はオプショナル
+# 環境構築方法
+- [RasPike-ROS環境構築Wiki](https://github.com/Hiyama1026/raspike-ros/wiki)に従い，環境構築を行う
 
-## 1. Raspberry Pi用OSのインストールとROS 2のインストール
-
-### A：Ubuntu22.04LTSを使用する場合
-1. Ubuntu22.04のイメージファイルを入手し，[RaspberryPI OS Imager](https://www.raspberrypi.com/software/)等を使用してSDカードに焼く
-    - イメージ入手先例：下記サイトのPreinstalled desktop image
-        - https://ftp.jaist.ac.jp/pub/Linux/ubuntu-cdimage/ubuntu/releases/22.04/release/
-        - ダウンロード後，xzファイルを解凍して使用
-
-1. - [ROS 2公式サイト](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)，もしくは下記付録の「[Ubuntu PCにROS 2 Humbleをインストールする方法](#ubuntu-pcにros-2-humbleをインストールする方法)」に従い，ROS 2 Humbleをインストール
-
-1. GPIOの接続を有効にする
-    - これは下記ETロボコンの環境構築方法と同様に32番，33番ピンを使用する方法である
-        - https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike
-    - 下記のコマンドで設定ファイルを開く
-        ```bash
-        sudo nano /boot/config.txt
-        ```
-
-    - config.txtの最後に下記を追加
-        ```bash
-        enable_uart=6
-        dtoverlay=uart5
-        ```
-        
-    - リブートする
-        ```bash
-        sudo reboot
-        ```
-
-### B：Raspberry Pi OSを使用する場合
-1. Raspberry Pi OS (**64bit**)をインストール
-    - [インストラー](https://www.raspberrypi.com/software/)をインストール
-    - インストラーでRaspberry Pi OS(64bit)のイメージをSDに作成
-        - ROSを動かすために**64bit版**を使用する
-        - **2023-05-03リリース版**を使用する事を推奨（動作確認済み）
-            - [ここ](https://downloads.raspberrypi.com/raspios_arm64/images/?_gl=1*jkvy7z*_ga*MTk3MzQ4Nzc0Ny4xNzEyMjk0Njcx*_ga_22FD70LWDS*MTcxMjgyMDI0My4zLjEuMTcxMjgyMjM3OC4wLjAuMA..)の2023-05-03-raspios-bullseye-arm64.img.xzなど
-
-
-1. GPIOの接続を有効にする
-    - これは下記ETロボコンの環境構築方法と同様に32番，33番ピンを使用する方法である
-        - https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike
-    - 下記のコマンドで設定ファイルを開く
-        ```bash
-        sudo nano /boot/config.txt
-        ```
-
-    - config.txtの最後に下記を追加
-        ```bash
-        enable_uart=6
-        dtoverlay=uart5
-        ```
-        
-    - リブートする
-        ```bash
-        sudo reboot
-        ```
-
-    - シリアル通信のケーブルをRaspberry Piに接続する
-        - 参考：[RasPike](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)
-
-1. ROS 2のインストール
-    - アップデート
-        ```bash
-        sudo apt update
-        sudo apt -y upgrade 
-        ```
-
-    - ROS 2パッケージをインストールする
-        ```bash
-        wget https://s3.ap-northeast-1.wasabisys.com/download-raw/dpkg/ros2-desktop/debian/bullseye/ros-humble-desktop-0.3.1_arm64.deb
-        sudo apt install -y ./ros-humble-desktop-0.3.1_arm64.deb
-        source /opt/ros/humble/setup.bash
-        ```
-
-    - ビルドツールのインストール
-        ```bash
-        sudo pip install vcstool colcon-common-extensions
-        ```
-
-    - ROS環境の自動読み込み設定
-        ```bash
-        echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-        source ~/.bashrc
-        ```
-
-    - 動作確認
-        ```bash
-        ros2 launch demo_nodes_cpp talker_listener.launch.py
-        ```
-        - 下記のように出力されれば成功
-        ```
-        [INFO] [launch]: All log files can be found below /home/hiyama/.ros/log/2023-07-04-14-52-42-067659-raspi-1582
-        [INFO] [launch]: Default logging verbosity is set to INFO
-        [INFO] [talker-1]: process started with pid [1583]
-        [INFO] [listener-2]: process started with pid [1585]
-        [talker-1] [INFO] [1688449964.564641073] [talker]: Publishing: 'Hello World: 1'
-        [listener-2] [INFO] [1688449964.565626925] [listener]: I heard: [Hello World: 1]
-        [talker-1] [INFO] [1688449965.564647258] [talker]: Publishing: 'Hello World: 2'
-        [listener-2] [INFO] [1688449965.565234628] [listener]: I heard: [Hello World: 2]
-        ...
-        ```
-    - ROS 2用のワークスペースを作成する
-        ```bash
-        mkdir ros2_ws
-        cd ros2_ws
-        mkdir src
-        ```
-
-    - ROS 2パッケージをワークスペースに置く
-        - `ros2_ws/src`に以下のファイルを置く
-            - raspike_uros_msg
-            - ros2_raspike_rt (ROS2 APIを直接扱って開発を行う場合は不要)
-            - [linetrace_sample](./sample/linetrace_sample/) (サンプルプログラムのためどちらでも良い)
-
-    - ROS 2パッケージをビルドする
-        ```bash
-        colcon build
-        . install/setup.bash
-        ```
-1. **Cパッケージのビルド時にエラーになる場合の解決方法**
-    - Cパッケージ(raspike_uros_msg)のビルドでエラーになる事がある
-    - その場合は`/opt/ros/humble/opt`にある`libcurl_vendor`フォルダを削除する
-        ```bash
-        cd /opt/ros/humble/opt
-        sudo rm -rf libcurl_vendor
-        cd ~/ros2_ws
-        colcon build
-        ```
-
-
-
-## 2. Raspberry Pi上でエージェントをビルド・実行（方法1，2のどちらでも可）
-- 以下はRaspberr Pi OSとUbuntu22.04で共通の手順
-### エージェントのビルドと実行:方法1（動作確認済み）
-0. 参考
-    - 下記の記事を参考にで`Micro-XRCE-DDS-Agent`をビルドする
-        - <https://qiita.com/lutecia16v/items/5760551dd3a7a0d3e7d3>
-
-1. `Micro-XRCE-DDS-Agent`のコードをクローン
-
-    ``` bash
-    cd ~
-    git clone https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
-    ```
-
-1. ビルド
-
-    ```bash
-    cd Micro-XRCE-DDS-Agent
-    mkdir build && cd build
-    cmake -DTHIRDPARTY=ON ..
-    make
-    sudo make install
-    sudo ldconfig /usr/local/lib/
-    ```
-    - **CMakeのバージョンが古いと言われた場合は新しくする**
-        - [CMake公式](https://cmake.org/download/)の[Older Releases](https://cmake.org/files/)からcmake-3.27.2-linux-aarch64.tar.gzをダウンロード
-        - 下記コマンドで更新([参考サイト](https://qiita.com/koki2022/items/481c1b03445567263a97))
-            - ``tar -zxvf cmake-3.27.2-linux-aarch64.tar.gz``
-            - ``sudo mv cmake-3.27.2-linux-aarch64/ /opt``
-            - ``sudo ln -s /opt/cmake-3.27.2-linux-aarch64/bin/* /usr/bin``
-        - .bashrcに以下を追加してロード ($ source ~/.bashrc)
-            ```
-            export PATH=/opt/cmake-3.27.2-linux-aarch64/bin:$PATH
-            export CMAKE_PREFIX_PATH=/opt/cmake-3.27.2-linux-aarch64:$CMAKE_PREFIX_PATH
-            ```
-        - <補足>
-            - ``$ sudo apt remove cmake``等をするとROSが壊れる
-            - 壊れた場合は``$ sudo apt install -y ./ros-humble-desktop-0.3.1_arm64.deb``を再度実行（RaspberryPi OSの場合）
-
-1. 実行
-
-- `verbose_level`を6に設定して、メッセージの受信を表示するようにする
-    - 2つ目のエージェントの実行コマンドは`sudo`が必要な場合がある
-    - device はSPIKEと接続されているポート名(/dev/ttyXX)を指定
-    ```bash
-    source /opt/ros/humble/setup.bash
-    MicroXRCEAgent serial --dev [device] -v 6
-    ```
-    - (例)シリアルの接続方法が[RasPike](https://github.com/ETrobocon/RasPike/wiki/connect_raspi_spike)と同じ場合
-        ```
-        source /opt/ros/humble/setup.bash
-        MicroXRCEAgent serial --dev /dev/ttyAMA1 -v 6
-        ```
-    
-
-### エージェントのビルドと実行:方法2
-1. エージェントのビルド
-    ```bash
-    cd uros_ws    
-    ros2 run micro_ros_setup create_agent_ws.sh
-    colcon build
-    source install/local_setup.bash
-    ```
-
-1. エージェントの実行
-    - device はSPIKEと接続されているポート名(/dev/ttyXX)を指定
-    ```bash
-    ros2 run micro_ros_agent micro_ros_agent serial --dev [device]
-    ```    
-
-## 3. SPIKE側の環境構築
-1. SPIKE向けファームウェアを書き込む
-    - [raspike-ros/bin](./bin/)のREADME.mdに従う
-
-1. SPIKEとRaspberry Piをシリアルで接続する
-    - シリアル通信用のケーブルはSPIKEのポートFに接続する
-    - 下記の表に従ってデバイスを接続する
-        - RasPikeの超音波センサーの接続ポートとシリアル通信のポートを入れ替えている
-
-            |接続デバイス|ポート|
-            |---|---|
-            |アームモータ|A|
-            |右モータ|B|
-            |左モータ|E|
-            |カラーセンサー|C|
-            |serial通信|**F**|
-            |超音波センサー|**D**|
-
-1. (補足) [micro-ROSファームウェア自動生成ツール](https://github.com/Hiyama1026/uros_spike-rt_gen)を使用して接続デバイスを変更する事も可能
-
-## 4. ROS 2プログラムの開発と実行
-<!--
-- Raspberry Piでagentの実行とは別のターミナルを起動してROS 2プログラムを実行する
-    - ROS 2プログラム実行のコマンドのフォーマットは次の通り
-        ```bash
-        ros2 run [パッケージ名] [ノード名]
-        ```
--->
-
-### A. アプリ開発用APIを使用して開発を行う方法
-1. パッケージをROS 2用ワークスペースにコピー(実施済みの場合はスキップ)
-    ```bash
-    cp -r ~/raspike-ros/ros2_raspike_rt ~/ros2_ws
-    cp -r ~/raspike-ros/raspike_uros_msg ~/ros2_ws
-    ```
-1. ros2_raspike_rt/ros2_raspike_rt/app_node.pyに処理を記述
-    - `app_timer()`はデフォルトでは10ms周期で呼び出される
-    - [APIリファレンス](./ros2_raspike_rt/API_REFERENCE.md)
-1. Raspberry Piのターミナルでエージェントを実行する
-    ```bash
-    ros2 run micro_ros_agent micro_ros_agent serial --dev [device]
-    ```
-1. SPIKEの電源を入れる
-    - 必ず，「エージェントの実行」→「SPIKEの起動」の順番である必要がある
-    - Hubのディスプレイに「ET」の文字が表示されたら，エージェントとの接続が完了している
-1. ROS 2アプリを開発しているPCのターミナルで下記のコマンドを入力し，アプリを実行する
-    - Raspberry Piの場合は，エージェント用とは別にターミナルを立ち上げる
-    ```bash
-    cd ~/ros2_ws
-    . install/setup.bash
-    ros2 run ros2_raspike_rt app_node   # ROS 2アプリの実行
-    ```
-1. ROS 2のプログラムを変更したら，その度に下記のコマンドを実行する必要がある
-    ```bash
-    cd ~/ros2_ws
-    colcon build
-    . install/setup.bash
-    ```
-
-### B. ROS 2プログラミングによりアプリケーションを開発する方法
-一般的なROS 2のアプリ開発の方法で開発を行う<Br>
-1. ROS 2ワークスペースのsrcディレクトリ内にROS 2パッケージを作成する
-    ```
-    cd ~/ros2_ws/src
-    # Pythonパッケージを作成する場合
-    ros2 pkg create --build-type ament_python [pkg_name] --dependencies rclpy
-    # C++パッケージを作成する場合
-    ros2 pkg create --build-type ament_cmake [pkg_name]
-    ```
-1. ROS 2アプリを開発する
-    - ROS2プログラミングのガイド[ROS2_GUIDE.md](./ROS2_GUIDE.md)に従いアプリを開発する
-    - 参考：サンプルプログラム
-        - [linetrace_sample](./sample/linetrace_sample/)
-    - (注)Pythonパッケージによる開発のみ動作確認済み
-1. 開発したROS 2パッケージをビルドする
-     ```bash
-    cd ~/ros2_ws
-    colcon build
-    . install/setup.bash
-    ```
-1. Raspberry Pi上でuROSエージェントを実行し，SPIKEの電源を入れる
-1. アプリを実行する
-    ```
-    cd ~/ros2_ws
-    ros2 run [pkg_name] [node_name]
-    ```
-
-
-# SPIKE側のuROSプログラムを編集したい場合の環境構築方法（オプション）
-- uros_raspike-rtの使用方法
-    - uROSプログラム（asp.dfu）を自前でビルドして実行する手順
-## Raspberry Pi側の環境構築
-- [uROSプログラムに変更が必要無い場合](#使用方法urosプログラムに変更が必要無い場合)と同じ
-## 1. SPIKE側の環境構築
-1. PC上でワークスペースを作成する
-    ```bash
-    mkdir ~/asp_uros_ws
-    cd ~/asp_uros_ws
-    ```
-
-1. spike-rtとmicro-ROS_ASP3をクローン
-    - [動作確認済のバージョン](#動作環境)
-    ```bash
-    git clone https://github.com/exshonda/micro-ROS_ASP3.git
-    git clone -b v0.2.0 https://github.com/spike-rt/spike-rt.git
-    ```
-
-1. spike-rtとmicro-ROS_ASP3をセットアップ
-    - 参考
-        - [micro-ROS_ASP3](https://github.com/exshonda/micro-ROS_ASP3)
-            - `Makefile.config`のターゲットボードはPrime Hubを選択する
-        - [spike-rt](https://github.com/spike-rt/spike-rt)
-
-1. micro-ROS_ASP3にカスタムメッセージ定義パッケージを追加
-    - `micro-ROS_ASP3/external/primehub/firmware/mcu_ws`にraspike_uros_msgを置く
-    - `micro-ROS_ASP3/micro_ros_asp/micro_ros_asp.mk`に下記を追加
-    ```
-    INCLUDES += -I$(MIROROS_ASP3_TOP_DIR)/$(MICROROS_INC)/raspike_uros_msg
-    ```
-    - libmicroros.a のビルドを実行
-    ```bash
-    cd ~/asp_uros_ws/micro-ROS_ASP3/external
-    make build_firmware
-    ```
-
-1. uROSパッケージを追加・SPIKEへの書き込み
-    - `micro-ROS_ASP3/spike-rt`にuros_raspike-rtを置く
-    - 下記のどちらかのコマンドでビルド・書き込み
-        - (※)並列ビルドでエラーになる時がある．
-            - その時は2回`make asp.bin`でビルドする事ができる
-    ```bash
-    cd ../spike-rt/uros_raspike_rt
-    make asp.bin
-    python3 ../../../spike-rt/asp3/target/primehub_gcc/tools/dfu.py -b 0x8008000:asp.bin asp.dfu
-    sudo python3 ../../../spike-rt/asp3/target/primehub_gcc/tools/pydfu.py -u asp.dfu --vid 0x0694 --pid 0x0008
-    ```
-    - または
-    ```bash
-    cd ../spike-rt/uros_raspike_rt
-    make deploy-dfu
-    ```
-## 2. SPIKEとRaspberry Piの接続・ROS 2アプリの実行
-- 接続方法，ROS 2アプリの実行方法の基本的な流れは[uROSプログラムに変更が必要無い場合](#使用方法urosプログラムに変更が必要無い場合)と同じ
-
-<br>
-<br>
 
 # 使用できるパブリッシャー・サブスクライバー
 - [linetrace_sample/README.md](./sample/README.md/#参考1使用できるメッセージ型・パブリッシャー・サブスクライバー)を参照
@@ -411,7 +64,7 @@
 <br>
 <br>
 
-# カスタムメッセージ型の仕様
+# カスタムメッセージ型(raspike_uros_msg)の仕様
 - SPIKE(uRPS) → Raspberry Pi(ROS 2)<BR>
 ![to_rpi_message](./img/to_rpi_msg_contents.png)
 
@@ -460,7 +113,13 @@
 <br>
 <br>
 
-# 設計メモ
+# 免責
+- 本ソフトウェアの利用により直接的または間接的に生じたいかなる損害に関しても，その責任を負わない．
+
+<br>
+<br>
+
+# 付録：設計メモ
 - uROS(SPIKE)側のQoSについて
     - uROS側で10ms周期で送信するトピックのQoSをRELIABLEにすると，uROS側のサブスクライバーがデータをドロップすることを確認．
         - uROSはシングルタスクで動いている．
@@ -488,83 +147,3 @@
 - ボタンコマンドについて
     - SPIKE(uros.c)は，押されているボタンに応じたコマンドを送信している.
     - コマンドの値はRasPike環境に揃えている．
-
-<br>
-<br>
-
-# 免責
-- 本ソフトウェアの利用により直接的または間接的に生じたいかなる損害に関しても，その責任を負わない．
-
-<br>
-<br>
-
-# 付録
-## Ubuntu PCにROS 2 Humbleをインストールする方法
-- [公式サイト](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)を参考にした手順
-
-1. ロケールを設定
-    ```
-    locale  # check for UTF-8
-
-    sudo apt update && sudo apt install locales
-    sudo locale-gen en_US en_US.UTF-8
-    sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
-    export LANG=en_US.UTF-8
-
-    locale  # verify settings
-    ```
-
-1. ROS2 リポジトリのインストール
-    ```
-    sudo apt install software-properties-common
-    sudo add-apt-repository universe
-    ```
-
-1. GPGキーの設定
-    ```
-    sudo apt update && sudo apt install curl -y
-    sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-    ```
-
-1. リポジトリをソースリストに追加
-    ```
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-    ```
-
-1. aptのアップグレード（必須）
-    ```
-    sudo apt update
-    sudo apt upgrade
-    ```
-
-1. ツールのインストール
-    ```
-    sudo apt install ros-humble-desktop
-    ```
-    ```
-    sudo apt install ros-humble-ros-base
-    ```
-    ```
-    sudo apt install ros-dev-tools
-    ```
-
-1. セットアップの実行（起動時毎に必要なためbashの設定ファイルに記載しておくと良い）
-    ```
-    # Replace ".bash" with your shell if you're not using bash
-    # Possible values are: setup.bash, setup.sh, setup.zsh
-    source /opt/ros/humble/setup.bash
-    ```
-
-1. テストの実行
-    ```
-    ros2 run demo_nodes_cpp talker
-    ```
-    - 下記のように表示されれば成功
-        ```
-        [INFO] [1700732992.424835597] [talker]: Publishing: 'Hello World: 1'
-        [INFO] [1700732993.424739244] [talker]: Publishing: 'Hello World: 2'
-        [INFO] [1700732994.424762644] [talker]: Publishing: 'Hello World: 3'
-        [INFO] [1700732995.424767342] [talker]: Publishing: 'Hello World: 4'
-        ...
-        ```
-
