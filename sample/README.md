@@ -10,6 +10,11 @@
     ```bash
     cp -r ~/uros_raspike-rt/sample/[サンプルパッケージ名] ~/ros2_ws/src
     ```
+- カスタムメッセージ型定義パッケージをROS 2ワークスペース内のsrcにコピー
+    ```bash
+    cp -r ~/uros_raspike-rt/raspike_uros_msg ~/ros2_ws/src
+    ```
+
 - ビルドして実行
     ```bash
     cd ~/ros2_ws
@@ -36,6 +41,16 @@
     - runコマンド
         ```
         ros2 run go_straight_cpp cpp_go_straight_pubsub
+        ```
+
+- wall_stop_cpp
+    - 走行体を直進させ，前方に物体を検知したら停止するサンプル
+        - 距離センサを使用
+    - センターボタンを押すと動作開始・動作停止
+    - C++で作成
+    - runコマンド
+        ```
+        ros2 run wall_stop_cpp cpp_wall_stop_node
         ```
 
 ## 参考（[ROS2_GUIDE.md](../ROS2_GUIDE.md)の抜粋）    
