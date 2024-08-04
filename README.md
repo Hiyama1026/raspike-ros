@@ -44,7 +44,7 @@
 1. **ROS 2 APIを直接扱い．ROS2プログラミングによりアプリケーションを開発する方法**
     - [ETロボコン走行体向けカスタムメッセージ型](#カスタムメッセージ型の仕様)を直接扱う
     - ガイドを[ROS2_GUIDE.md](./ROS2_GUIDE.md)に記載
-    - サンプルプログラム : [linetrace_sample](./sample/linetrace_sample/)
+    - サンプルプログラム : [linetrace_sample](./sample-pkgs/linetrace_sample/)
 1. **アプリケーション開発用APIを使用**
     - 走行体制御アプリケーションの開発向けにカスタムメッセージをラップした専用APIを使用する方法．
     - [専用API仕様](./ros2_raspike_rt/API_REFERENCE.md)
@@ -56,7 +56,7 @@
 
 
 # 使用できるパブリッシャー・サブスクライバー
-- [linetrace_sample/README.md](./sample/README.md/#参考1使用できるメッセージ型・パブリッシャー・サブスクライバー)を参照
+- [linetrace_sample/README.md](./sample-pkgs/linetrace_sample/README.md/#参考1使用できるメッセージ型・パブリッシャー・サブスクライバー)を参照
     - 注意：QoSを揃える必要がある
 
 # カスタムメッセージ型(raspike_uros_msg)の仕様
@@ -95,7 +95,7 @@
                 - app_node.pyからAPIを介して指令値が渡される
                 - uros_raspike-rt(SPIKE)と通信する
 
-- sample
+- sample-pkgs
     - ETロボコン走行体向けのROS 2サンプルプログラム
 
 - uros_raspike-rt
