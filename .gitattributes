@@ -1,1 +1,3 @@
 *.txt linguist-detectable=false
+*.cpp linguist-detectable=true
+*.hpp linguist-detectable=true
