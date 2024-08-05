@@ -10,7 +10,7 @@
 - RasPike-ROSの環境構築が完了している事が前提条件
 - ユーザはRaspberry Pi（もしくはROS2に接続可能なLinux PC）上でROS2アプリ開発を行う
     - SPIKE上のmicro-ROS(uROS)プログラムの通信相手となるプログラムを開発する
-    - uros_raspike-rt(bin/asp.dfu)の通信相手
+        - uros_raspike-rt(bin/asp.bin)の通信相手
 
 ## 目次
 - [トピックの扱い方](#トピックの扱い方)

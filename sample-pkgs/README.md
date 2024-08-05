@@ -8,11 +8,11 @@
 ## 使用方法
 - 各サンプルプログラム（パッケージ）をROS 2ワークスペース内のsrcにコピー
     ```bash
-    cp -r ~/uros_raspike-rt/sample-pkgs/[サンプルパッケージ名] ~/ros2_ws/src
+    cp -r ~/raspike-ros/sample-pkgs/[サンプルパッケージ名] ~/ros2_ws/src
     ```
 - カスタムメッセージ型定義パッケージをROS 2ワークスペース内のsrcにコピー
     ```bash
-    cp -r ~/uros_raspike-rt/raspike_uros_msg ~/ros2_ws/src
+    cp -r ~/raspike-ros/raspike_uros_msg ~/ros2_ws/src
     ```
 
 - ビルドして実行

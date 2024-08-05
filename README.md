@@ -71,8 +71,6 @@
     - asp.dfu
         - micro-ROS(uROS)ファームウェアのプリビルドバイナリ
         - SPIKEに書き込んで使用する
-    - pydfu.py
-        - SPIKEへの書き込みプログラム
 
 - raspike_uros_msg
     - ETロボコン走行体用カスタムメッセージのメッセージ型定義用ROS 2パッケージ

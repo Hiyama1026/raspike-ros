@@ -1,7 +1,9 @@
 # SPIKE側ファームウェア（micro-ROS）の書き込み
 ## 概要
-- SPIKE側ファームウェアの書き込み用
-- SPIKE側の環境構築は下記手順を実施するのみで良い
+- SPIKE上で動作するmicro-ROSファームウェアのバイナリファイル
+    - [uros_raspike_rt](../uros_raspike_rt/)を(プリビルド)バイナリにしたもの
+- 本ディレクトリはSPIKE側ファームウェアの書き込みに使用する
+    - SPIKE側の環境構築は下記手順を実施するのみで良い
 
 ## 動作確認済み環境
 - WSL2
@@ -21,7 +23,7 @@
     ```
 - ディレクトリ移動
     ```bash
-    cd ~/uros_raspike-rt/bin
+    cd ~/raspike-ros/bin
     ```
 - 下記のコマンドでファームウェアをSPIKEに書き込む
     - WSL2の場合

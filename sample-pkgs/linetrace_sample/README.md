@@ -13,12 +13,12 @@
 
 ## 実行
 - ROS 2のインストールとROS 2のワークスペースが作成済みである事が前提
-    - ROS 2のインストールはuros_raspike-rtの[README.md](../README.md)等を参照
+    - ROS 2のインストールはraspike-rosの[README.md](../README.md)等を参照
     - ROS 2ワークスペースの作成は[付録](#参考2ros-2ワークスペースの作成方法)を参照
 - サンプルプログラムをROS2ワークスペースにコピー
     ```bash
-    cp -r uros_raspike-rt/linetrace_sample [PATH-TO-ROS2_WS]    # ROS 2アプリパッケージ
-    cp -r uros_raspike-rt/raspike_uros_msg [PATH-TO-ROS2_WS]    # カスタムメッセージ型定義ファイル
+    cp -r raspike-ros/linetrace_sample [PATH-TO-ROS2_WS]    # ROS 2アプリパッケージ
+    cp -r raspike-ros/raspike_uros_msg [PATH-TO-ROS2_WS]    # カスタムメッセージ型定義ファイル
     ```
 - ROS2ワークスペースをビルド
     ```bash
