@@ -19,8 +19,6 @@ class AngleMeasureNode(Node):
 
         qos_profile = QoSProfile(depth=10, reliability=2)
 
-        self.is_start = False
-        self.steering_amount = 0
         # 受信メッセージ
         self.rev_x_angle = 0
         self.pre_rev_x_angle = 0
