@@ -181,12 +181,15 @@ class imuClass:
     def __init__(self):
         pass
 
-    def init(self):
+    def reset_angle(self):
         send_data.set_imu_init_val(True)
 
-    def get_x_angular_velocity(self):
-        return rev_data.get_x_ang_vel_val()
-
+    def get_x_angle(self):
+        return rev_data.get_x_angle_val()
+    
+    def get_z_angle(self):
+        return rev_data.get_z_angle_val()
+    
 imu = imuClass()
 
 class buttonClass:

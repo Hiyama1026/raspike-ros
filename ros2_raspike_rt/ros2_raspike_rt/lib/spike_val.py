@@ -13,7 +13,8 @@ class rev_data_class:
         self.__spike_ultrasonic_mode = 0
         self.__ultrasonic_distance = 0
         self.__ultrasonic_presence = 0
-        self.__gyro_x_angular_velocity = 0.0    # float32
+        self.__gyro_x_angle = 0
+        self.__gyro_z_angle = 0
         self.__hub_button_status = 0
         self.__hub_touch_sensor_status = 0
         self.__hub_voltage = 0
@@ -105,11 +106,17 @@ class rev_data_class:
         return self.__ultrasonic_presence
 
     # gyro sensor
-    def set_x_ang_vel_val(self, gyro_val):   
-        self.__gyro_x_angular_velocity = gyro_val
+    def set_x_angle_val(self, gyro_val_x):   
+        self.__gyro_x_angle = gyro_val_x
     
-    def get_x_ang_vel_val(self):          
-        return self.__gyro_x_angular_velocity
+    def get_x_angle_val(self):          
+        return self.__gyro_x_angle
+    
+    def set_z_angle_val(self, gyro_val_z):   
+        self.__gyro_z_angle = gyro_val_z
+    
+    def get_z_angle_val(self):          
+        return self.__gyro_z_angle
 
     # button status
     def set_button_status_val(self, button):   

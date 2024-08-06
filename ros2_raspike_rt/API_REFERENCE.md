@@ -333,25 +333,32 @@ RGB値のうち，Bを取得する．<BR>
 ## IMU
 
 ### <関数>
-- void [imu.init](#void-imuinitvoid)(void)
-- float32 [imu.get_x_angular_velocity](#float32-imuget_x_angular_velocityvoid)(void)
+- void [imu.reset_angle](#void-imureset_anglevoid)(void)
+- int16 [imu.get_x_angle](#int16-imuget_x_anglevoid)(void)
+- int16 [imu.get_z_angle](#int16-imuget_z_anglevoid)(void)
 
 
 ### <関数詳解>
-### void imu.init(void)
+### void imu.reset_angle(void)
 IMUを初期化する．
 - 引数
     - 無し
 - 戻り値
     - 無し
 
-### float32 imu.get_x_angular_velocity(void)
-X軸方向の角速度を取得する．
+### int16 imu.get_x_angle(void)
+X軸方向の角度を取得する．
 - 引数
     - 無し
 - 戻り値
-    - X軸方向の角速度[°/s]
+    - X軸方向の角度[°]
 
+### int16 imu.get_z_angle(void)
+Z軸方向の角度を取得する．
+- 引数
+    - 無し
+- 戻り値
+    - Z軸方向の角度[°]
 
 ## ボタン
 
