@@ -22,8 +22,8 @@ class AngleMeasureNode(Node):
         self.is_start = False
         self.steering_amount = 0
         # 受信メッセージ
-        self.rev_y_angle = 0
-        self.pre_rev_y_angle = 0
+        self.rev_x_angle = 0
+        self.pre_rev_x_angle = 0
         self.pre_rev_z_angle = 0
         self.rev_z_angle = 0
         self.pre_button_val = 0
@@ -43,11 +43,11 @@ class AngleMeasureNode(Node):
 
     def timer_on_tick(self):
         # 角度が変化したら表示
-        if self.rev_y_angle != self.pre_rev_y_angle or self.rev_z_angle != self.pre_rev_z_angle:
+        if self.rev_x_angle != self.pre_rev_x_angle or self.rev_z_angle != self.pre_rev_z_angle:
             self.get_logger().info("---")
-            self.get_logger().info("y_angle : " + str(self.rev_y_angle))
+            self.get_logger().info("x_angle : " + str(self.rev_x_angle))
             self.get_logger().info("z_angle : " + str(self.rev_z_angle))
-        self.pre_rev_y_angle = self.rev_y_angle
+        self.pre_rev_x_angle = self.rev_x_angle
         self.pre_rev_z_angle = self.rev_z_angle
         
         #センターボタンが押されたら角度をリセット
@@ -62,7 +62,7 @@ class AngleMeasureNode(Node):
 
     # サブスクライバー　コールバック
     def dev_status_on_subscribe(self, devise_status):
-        self.rev_y_angle = devise_status.y_angle
+        self.rev_x_angle = devise_status.x_angle
         self.rev_z_angle = devise_status.z_angle
         
     def button_status_on_subscribe(self, button_status):
