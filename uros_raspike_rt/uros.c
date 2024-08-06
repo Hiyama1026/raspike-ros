@@ -111,6 +111,8 @@ static timer_count = 0;
 bool speaker_enabled = false;
 int16_t speaker_play_duration = 0;
 int16_t speaker_cnt = 0;
+float y_angle = 0;
+float z_angle = 0;
 
 int button_state;
 int touch_sensor_state;
@@ -334,6 +336,17 @@ timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 
 	RCLC_UNUSED(last_call_time);
 	if (timer != NULL) {
+		/*imu*/
+		hub_imu_get_angular_velocity(&hub_angular_velocity[0]);
+        // 1 °/s以下の場合は角度を更新しない(Hubの個体差により静止時の角速度が0にならない事があるため)
+        if (!((hub_angular_velocity[0] <= 1) && (hub_angular_velocity[0] >= -1))) {
+            y_angle += hub_angular_velocity[0] * 0.01;
+        }
+        if (!((hub_angular_velocity[2] <= 1) && (hub_angular_velocity[2] >= -1))) {
+            z_angle += hub_angular_velocity[2] * 0.01;
+        }
+		device_status.y_angle = (int)y_angle;
+		device_status.z_angle = (int)z_angle;
 		/*color*/
 		get_color_sensor_value(current_color_mode);
 		device_status.color_mode_id = send_color_mode_id;
@@ -348,9 +361,6 @@ timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 		device_status.arm_count = pup_motor_get_count(a_motor);
 		device_status.right_count = pup_motor_get_count(r_motor);
 		device_status.left_count = pup_motor_get_count(l_motor);
-		/*imu*/
-		hub_imu_get_angular_velocity(&hub_angular_velocity[0]);
-		device_status.gyro_sensor = hub_angular_velocity[0];
 
 		RCSOFTCHECK(rcl_publish(&dev_status_publisher, &device_status, NULL));
 
@@ -459,7 +469,10 @@ void imu_init_callback(const void * msgin)
 {
 	const std_msgs__msg__Bool * imu_init = (const std_msgs__msg__Bool *)msgin;
 
-	if(imu_init->data)	hub_imu_init();
+	if(imu_init->data) {
+        y_angle = 0;    // 角度をリセット
+        z_angle = 0;
+    }
 }
 
 /*
