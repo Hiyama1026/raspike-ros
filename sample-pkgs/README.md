@@ -33,6 +33,15 @@
         ros2 run linetrace_sample lt_sample_node 
         ```
 
+- angle_measure
+    - SPIKE側で取得した角度を受信して表示するサンプル
+        - X軸またはZ軸の角度が変化したら表示
+    - センターボタンを押すと角度をリセットする
+    - runコマンド
+        ```
+        ros2 run angle_measure angle_measure_node
+        ```
+
 - go_straight_cpp
     - 走行体を直進させ，黒線を見つけたら停止するサンプル
     - センターボタンを押すと動作開始・動作停止
