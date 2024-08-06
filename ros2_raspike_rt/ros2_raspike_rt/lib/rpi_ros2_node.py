@@ -136,7 +136,8 @@ class rasberryPiNode(Node):
         rev_data.set_right_count_val(devise_status.right_count)
         rev_data.set_left_count_val(devise_status.left_count)
 
-        rev_data.set_x_ang_vel_val(devise_status.gyro_sensor)
+        rev_data.set_x_angle_val(devise_status.x_angle)
+        rev_data.set_z_angle_val(devise_status.z_angle)
         
     def button_status_on_subscribe(self, button_status):
         #self.get_logger().info("touch_sensor : " + str(button_status.touch_sensor))

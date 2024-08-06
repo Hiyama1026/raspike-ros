@@ -111,7 +111,7 @@ static timer_count = 0;
 bool speaker_enabled = false;
 int16_t speaker_play_duration = 0;
 int16_t speaker_cnt = 0;
-float y_angle = 0;
+float x_angle = 0;
 float z_angle = 0;
 
 int button_state;
@@ -340,12 +340,12 @@ timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 		hub_imu_get_angular_velocity(&hub_angular_velocity[0]);
         // 1 °/s以下の場合は角度を更新しない(Hubの個体差により静止時の角速度が0にならない事があるため)
         if (!((hub_angular_velocity[0] <= 1) && (hub_angular_velocity[0] >= -1))) {
-            y_angle += hub_angular_velocity[0] * 0.01;
+            x_angle += hub_angular_velocity[0] * 0.01;
         }
         if (!((hub_angular_velocity[2] <= 1) && (hub_angular_velocity[2] >= -1))) {
             z_angle += hub_angular_velocity[2] * 0.01;
         }
-		device_status.y_angle = (int)y_angle;
+		device_status.x_angle = (int)x_angle;
 		device_status.z_angle = (int)z_angle;
 		/*color*/
 		get_color_sensor_value(current_color_mode);
@@ -470,7 +470,7 @@ void imu_init_callback(const void * msgin)
 	const std_msgs__msg__Bool * imu_init = (const std_msgs__msg__Bool *)msgin;
 
 	if(imu_init->data) {
-        y_angle = 0;    // 角度をリセット
+        x_angle = 0;    // 角度をリセット
         z_angle = 0;
     }
 }
