@@ -61,10 +61,10 @@
 
 # カスタムメッセージ型(raspike_uros_msg)の仕様
 - SPIKE(uRPS) → Raspberry Pi(ROS 2)<BR>
-![to_rpi_message](./img/to_rpi_msg_contents.png)
+![to_rpi_msg_contents](https://github.com/user-attachments/assets/7fa07e0a-c5b7-457b-84b0-71c4e80f7e77)
 
 - Raspberry Pi(ROS 2) → SPIKE(uROS) <BR>
-![to_spike_message](./img/to_spike_msg_contents.png)
+![to_spike_msg_contents](https://github.com/user-attachments/assets/bee04edb-6a8c-4cba-9c76-95bf33356618)
 
 # ファイル構成
 - bin

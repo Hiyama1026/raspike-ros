@@ -22,11 +22,10 @@
 - [ros2アプリケーションを新規に作成する方法(参考)](#参考ros2アプリケーションを新規に作成する方法)
 
 <br>
-<br>
-<br>
-<br>
-<br>
 
+---
+
+<br>
 
 ## トピックの扱い方
 - RasPike-ROSでは全9種類のトピックを扱う
@@ -101,10 +100,10 @@
 
 ### カスタムメッセージ型の仕様表
 - SPIKE(uRPS) → rasberryPi(ROS 2)<BR>
-![to_rpi_message](./img/to_rpi_msg_contents.png)
+![to_rpi_msg_contents](https://github.com/user-attachments/assets/7fa07e0a-c5b7-457b-84b0-71c4e80f7e77)
 
 - rasberryPi(ROS 2) → SPIKE(uROS) <BR>
-![to_spike_message](./img/to_spike_msg_contents.png)
+![to_spike_msg_contents](https://github.com/user-attachments/assets/bee04edb-6a8c-4cba-9c76-95bf33356618)
 
 ### カスタムメッセージ型の使用例
 - モータの回転速度を指定(Python)
