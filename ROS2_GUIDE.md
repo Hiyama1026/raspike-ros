@@ -137,6 +137,11 @@
         self.rev_hub_current = hub_status.current
     ```
 
+### ジャイロセンサの軸方向
+- RasPike-ROSでは以下のように軸を定める
+
+![gyro_angle](https://github.com/user-attachments/assets/6df8a86d-0210-46f2-aefe-d2e4e60eb878)
+
 <br>
 <br>
 
