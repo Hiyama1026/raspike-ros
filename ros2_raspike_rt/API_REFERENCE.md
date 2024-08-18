@@ -360,6 +360,12 @@ Z軸方向の角度を取得する．
 - 戻り値
     - Z軸方向の角度[°]
 
+### <軸方向>
+- [ROS2_GUIDE.md](../ROS2_GUIDE.md)からの引用
+    
+![gyro_angle](https://github.com/user-attachments/assets/6df8a86d-0210-46f2-aefe-d2e4e60eb878)
+
+
 ## ボタン
 
 ### <ボタンコマンド>
