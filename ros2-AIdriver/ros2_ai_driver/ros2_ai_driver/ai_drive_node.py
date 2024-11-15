@@ -529,8 +529,6 @@ def main(args=None):
 			v_esc_on, v_auto_on, v_log_on,
 			v_log_print_on, v_angle_log_on, count_reset, v_servo_trim, v_speed_trim)
 
-		#from ros2_ai_driver.raspimouse import raspimouse as raspimouse
-		#executor_t.submit(raspimouse, v_ok, v_servo, v_esc, v_fps, cfg.SPEER_MAX) #ラズパイマウスを動作させる
 	# RCLの初期化
 	rclpy.init(args=args)
 
