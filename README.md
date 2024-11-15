@@ -12,11 +12,15 @@
 
 
 # 概要
-- 本ソフトウェアはROS 2によりETロボコン用走行体(もしくはそれと構成が同じロボット)を制御するためのソフトウェアプラットホームである
-    - リポジトリ名をuros_raspike-rtからリネーム（2024/08/01）
-- 本ソフトウェアを使用することよりROS 2のプログラムによりETロボコン用走行体を制御することが可能である
-- アプリ開発用APIを使用すれば，ROS 2の知識を有していなくてもアプリ開発が可能である
-- 実行動画(Youtube)：[https://youtu.be/RoaVhumuqcQ](https://youtu.be/RoaVhumuqcQ)
+- 本ソフトウェアはROS 2によりETロボコン用走行体(もしくはそれと構成が同じロボット)を制御するためのソフトウェアプラットホーム
+- 本ソフトウェアを使用することよりROS 2のプログラムによりETロボコン用走行体を制御
+- アプリ開発用APIを使用すれば，ROS 2の知識を有していなくてもアプリ開発が可能
+- ros2-AIdriver
+    - 「RasPike-ROS + TensorFlow」で機械学習によりETロボコン走行体等を自動走行させる
+    - カメラ(画像認識)を使用
+- 実行動画(Youtube)
+    - RasPike-ROS: [https://youtu.be/RoaVhumuqcQ](https://youtu.be/RoaVhumuqcQ)
+    - ros2-AIdriver: [https://www.youtube.com/watch?v=hQEU3xqogeI](https://www.youtube.com/watch?v=hQEU3xqogeI)
 
 # 動作確認済み環境
 
