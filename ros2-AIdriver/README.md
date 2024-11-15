@@ -17,3 +17,14 @@
         - Windows x86_64 Driver Version >= 452.39
     - CUDA 11.8
     - tensorflow 2.14
+
+## ファイル概要
+- ros2_ai_driver
+    - ROS 2パッケージ
+    - 機械学習によりモータ回転速度を推論し，ROS 2トピックとしてパブリッシュ
+- use_model
+    - ライントレースを行うモデル
+    - 円形のラインを時計回りにトレースするように学習したモデル
+- exe_trainning.sh
+    - 学習操作を自動化するスクリプト
+    - ホストPCで使用
