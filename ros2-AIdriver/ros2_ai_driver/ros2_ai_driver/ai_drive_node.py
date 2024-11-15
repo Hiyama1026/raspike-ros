@@ -1,3 +1,15 @@
+'''
+自動運転ラジコンカー
+AIドライバーあいちゃん
+http://ma2.la.coocan.jp/AI_Driver/
+
+走行プログラム
+aidriver.py
+author mitsuhiro matsuura
+version 1.01
+date 2023.01.22
+'''
+
 import rclpy
 from raspike_uros_msg.msg  import MotorSpeedMessage
 from raspike_uros_msg.msg import SpikeDevStatusMessage
